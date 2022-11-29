@@ -15,7 +15,7 @@ export default function Login({ setIsLogin, setUser }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const user = await SessionAPI.createSession(username, password);
-    if (user.username != null){
+    if (user.username != null) {
       setUser(user);
       setIsLogin(true);
     } else {
@@ -27,7 +27,7 @@ export default function Login({ setIsLogin, setUser }) {
   const handleCreate = async (event) => {
     event.preventDefault();
     const user = await UserAPI.createUser(username, password);
-    if (user.username != null){
+    if (user.username != null) {
       setUser(user);
       setIsLogin(true);
     } else {
@@ -78,7 +78,12 @@ export default function Login({ setIsLogin, setUser }) {
           <Button type="submit" fullWidth variant="contained" sx={{ mt: 3 }}>
             Login
           </Button>
-          <Button onClick={handleCreate} fullWidth variant="contained" sx={{ mt: 3 }}>
+          <Button
+            onClick={handleCreate}
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3 }}
+          >
             Register
           </Button>
         </Box>

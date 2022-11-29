@@ -14,9 +14,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import NavigationBar from "./components/NavigationBar";
 import SideBar from "./components/Sidebar";
 // pages
-// import ReservationSearch from "./pages/ReservationSearch";
-// import ReservationStatus from "./pages/ReservationStatus";
-import User from "./pages/User";
+import Chatroom from "./pages/Chatroom";
 import Login from "./pages/Login";
 // api
 import { SessionAPI } from "./api";
@@ -89,7 +87,7 @@ function App() {
           user={user}
           handleOpenDrawer={handleOpenDrawer}
         />
-        <SideBar open={openDrawer} handleCloseDrawer={handleCloseDrawer} />
+        {/* <SideBar open={openDrawer} handleCloseDrawer={handleCloseDrawer} /> */}
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <DrawerHeader />
           <Container>
@@ -99,7 +97,7 @@ function App() {
               <Switch>
                 <Route exact path="/">
                   {isLogin ? (
-                    <User user={user} />
+                    <Chatroom user={user} />
                   ) : (
                     <Login setUser={setUser} setIsLogin={setIsLogin} />
                   )}

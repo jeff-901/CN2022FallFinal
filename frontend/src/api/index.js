@@ -22,10 +22,7 @@ export const SessionAPI = {
 };
 
 export const UserAPI = {
-  createUser: (
-    username,
-    password,
-  ) =>
+  createUser: (username, password) =>
     userRequest({
       method: "post",
       url: `/api/users`,
@@ -42,4 +39,3 @@ export const UserAPI = {
       url: `/api/users/${username}`,
     }),
 };
-

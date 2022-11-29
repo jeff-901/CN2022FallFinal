@@ -12,12 +12,12 @@ export default function NavigationBar({
   isLogin,
   handleLogout,
   user,
-  handleOpenDrawer,
+  // handleOpenDrawer,
 }) {
   return (
     <AppBar position="fixed">
       <Toolbar>
-        <IconButton
+        {/* <IconButton
           size="large"
           edge="start"
           color="inherit"
@@ -26,7 +26,7 @@ export default function NavigationBar({
           onClick={handleOpenDrawer}
         >
           <MenuIcon />
-        </IconButton>
+        </IconButton> */}
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           Message App
         </Typography>
