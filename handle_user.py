@@ -13,6 +13,24 @@ def handle_post(request):
             return wrap_response(
                 request.version, 200, {}, "Data must contain username and password"
             )
+        if (len(get_user(user["username"])) != 0):
+            return wrap_response(
+            request.version,
+            502,
+            {
+                "Content-Type": "application/json",
+                "Connection": "close",
+                "Access-Control-Allow-Origin": "http://localhost:3000",
+                "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+                "Access-Control-Request-Headers": "Access-Control-Allow-Headers, Cookie, Content-Type, X-Requested-With, content-type, Origin, Accept, Access-Control-Request-Method, Access-Control-Request-Headers",
+                "Access-Control-Allow-Credentials": "true",
+                "Set-Cookie": "token="
+                + jwt.encode(
+                    {"username": user["username"]}, os.environ["secret"], algorithm="HS256",
+                ),
+            },
+            json.dumps({"message": "Already exist"}),
+        )
         user_obj = create_user(user)
         return wrap_response(
             request.version,
@@ -40,3 +58,18 @@ def handle_post(request):
             {},
             "Data format must be json. It contains username and password",
         )
+
+def handle_option(request):
+    return wrap_response(
+        request.version,
+        200,
+        {
+            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+            "Access-Control-Request-Headers": "Access-Control-Allow-Headers, Cookie, Content-Type, X-Requested-With, content-type, Origin, Accept, Access-Control-Request-Method, Access-Control-Request-Headers",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Max-Age": 86400,
+            "Connection": "keep-alive",
+        },
+        "success",
+    )

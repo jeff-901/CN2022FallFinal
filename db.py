@@ -1,6 +1,7 @@
 from pymongo import MongoClient
 import os
 from dotenv import load_dotenv
+import json
 load_dotenv()
 
 def get_database():
@@ -16,25 +17,38 @@ def get_database():
 
 
 dbname = get_database()
-collection_name = dbname["users"]
-# item_1 = {
-#     "username": "john",
-#     "password": "1234"
-# }
+user_collection = dbname["users"]
+item_1 = {
+    "username": "john",
+    "password": "1234",
+    "friends": []
+}
 
-# item_2 = {
-#     "username": "amy",
-#     "password": "1234"
-# }
-# collection_name.insert_many([item_1,item_2])
+item_2 = {
+    "username": "amy",
+    "password": "1234",
+    "friends": []
+}
+user_collection.insert_many([item_1,item_2])
 
 
 def get_user(username):
-    return list(collection_name.find({"username": username}))
+    users = list(user_collection.find({"username": username}))
+    print(f"find users with username {username}: {users}")
+    return users
 
 
 def create_user(user):
-    return collection_name.insert_one(user)
+    print(f"create users with {json.dumps(user)}")
+    return user_collection.insert_one(user)
+
+def update_user(user):
+    print(f"update user with {json.dumps(user)}")
+    myquery = { "username": { "$regex": user["username"] } }
+    newvalues = { "$set": { "friends": user["friends"] } }
+    x = user_collection.update_many(myquery, newvalues)
+    assert x.modified_count == 1
+    return True
 
 
 # for x in get_user("john"):

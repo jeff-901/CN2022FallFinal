@@ -39,6 +39,7 @@ def handle_post(request):
                 "Password is not correct",
             )
         else:
+            print(user[0])
             return wrap_response(
                 request.version,
                 200,
@@ -54,11 +55,12 @@ def handle_post(request):
                     "Access-Control-Request-Headers": "Access-Control-Allow-Headers, Content-Type, X-Requested-With, content-type, Origin, Accept, Access-Control-Request-Method, Access-Control-Request-Headers",
                     "Access-Control-Allow-Credentials": "true",
                 },
-                json.dumps({"username": user[0]["username"]}),
+                json.dumps({"username": user[0]["username"], "friends": user[0]["friends"]}),
             )
 
 
 def handle_get(request):
+    print("handle get session")
     if "token" not in request.cookies:
         return wrap_response(
             request.version,
@@ -87,8 +89,10 @@ def handle_get(request):
                 "Access-Control-Allow-Credentials": "true",
             },
         )
+    
     username = data["username"]
     user = get_user(username)
+    print(user)
     if len(user) == 0:
         return wrap_response(
             request.version,
@@ -114,7 +118,7 @@ def handle_get(request):
                 "Access-Control-Request-Headers": "Access-Control-Allow-Headers, Content-Type, X-Requested-With, content-type, Origin, Accept, Access-Control-Request-Method, Access-Control-Request-Headers",
                 "Access-Control-Allow-Credentials": "true",
             },
-            json.dumps({"username": user[0]["username"]}),
+            json.dumps({"username": user[0]["username"], "friends": user[0]["friends"]}),
         )
 
 

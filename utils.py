@@ -13,7 +13,7 @@ class HttpRequest:
             for cookie in cookies:
                 key, value = cookie.split("=")
                 self.cookies[key.strip()] = value.strip()
-        print(self.cookies)
+        print("cookies", self.cookies)
 
         self.data = data
 
@@ -45,7 +45,7 @@ def parse_request(http_request):
     data = lines[i]
     # print(http_method, path, version)
     # print(headers)
-    print("data:", data)
+    # print("data:", data)
     return HttpRequest(version, http_method, path, headers, data)
 
 

@@ -39,3 +39,18 @@ export const UserAPI = {
       url: `/api/users/${username}`,
     }),
 };
+
+export const FriendAPI = {
+  addFriend: (name) =>
+    userRequest({
+      method: "post",
+      url: `/api/friends`,
+      data: { name },
+    }),
+  deleteFriend: (name) =>
+    userRequest({
+      method: "delete",
+      url: `/api/friends`,
+      data: { name },
+    }),
+};

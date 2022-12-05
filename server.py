@@ -5,7 +5,7 @@ from utils import *
 import time
 
 from db import *
-import handle_session, handle_user
+import handle_session, handle_user, handle_friend
 
 # thread function
 def threaded(c):
@@ -62,34 +62,16 @@ def threaded(c):
         if request.method == "POST" and request.path == "/api/users":
             c.send(handle_user.handle_post(request))
         elif request.method == "OPTIONS":
-            c.send(
-                wrap_response(
-                    request.version,
-                    204,
-                    {
-                        "Access-Control-Allow-Origin": "http://localhost:3000",
-                        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-                        "Access-Control-Request-Headers": "Access-Control-Allow-Headers, Cookie, Content-Type, X-Requested-With, content-type, Origin, Accept, Access-Control-Request-Method, Access-Control-Request-Headers",
-                        "Access-Control-Allow-Credentials": "true",
-                    },
-                    "success",
-                )
-            )
+            c.send(handle_user.handle_option(request))
         else:
-            c.send(
-                wrap_response(
-                    request.version,
-                    501,
-                    {
-                        "Content-Type": "text/html",
-                        "Connection": "close",
-                        "Access-Control-Allow-Origin": "http://localhost:3000",
-                        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-                        "Access-Control-Request-Headers": "Access-Control-Allow-Headers, Cookie, Content-Type, X-Requested-With, content-type, Origin, Accept, Access-Control-Request-Method, Access-Control-Request-Headers",
-                        "Access-Control-Allow-Credentials": "true",
-                    },
-                )
-            )
+            c.send(wrap_response(request.version, 501, {"Connection": "close"},))
+    elif request.path == "/api/friends":
+        if request.method == "POST":
+            c.send(handle_friend.handle_post(request))
+        elif request.method == "DELETE":
+            c.send(handle_friend.handle_delete(request))
+        else:
+            c.send(wrap_response(request.version, 501, {"Connection": "close"},))
     else:
         c.send(
             wrap_response(

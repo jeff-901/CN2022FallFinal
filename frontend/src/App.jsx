@@ -3,6 +3,7 @@ import { Route, Switch, Redirect } from "react-router-dom";
 // hooks
 import { useState, useEffect } from "react";
 import { styled } from "@mui/material/styles";
+import { makeStyles } from '@mui/styles';
 // mui
 import { createTheme } from "@mui/material/styles";
 import { ThemeProvider } from "@mui/material/styles";
@@ -23,7 +24,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "flex-end",
-  padding: theme.spacing(0, 1),
+  padding: 0,
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
 }));
@@ -42,8 +43,17 @@ const themeOptions = {
 
 const theme = createTheme(themeOptions);
 
+const useStyles = makeStyles({
+  root: {
+    margin: 0,
+    padding: 0,
+  },
+});
+
+
 function App() {
   // drawer functions
+  const classes = useStyles();
   const [openDrawer, setOpenDrawer] = useState(false);
   const handleOpenDrawer = () => setOpenDrawer(true);
   const handleCloseDrawer = () => setOpenDrawer(false);
@@ -90,14 +100,14 @@ function App() {
         {/* <SideBar open={openDrawer} handleCloseDrawer={handleCloseDrawer} /> */}
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <DrawerHeader />
-          <Container>
+          {/* <Container> */}
             {fetching ? (
               <CircularProgress />
             ) : (
               <Switch>
                 <Route exact path="/">
                   {isLogin ? (
-                    <Chatroom user={user} />
+                    <Chatroom user={user} setUser={setUser} />
                   ) : (
                     <Login setUser={setUser} setIsLogin={setIsLogin} />
                   )}
@@ -118,7 +128,7 @@ function App() {
                 </Route> */}
               </Switch>
             )}
-          </Container>
+          {/* </Container> */}
         </Box>
       </Box>
     </ThemeProvider>
