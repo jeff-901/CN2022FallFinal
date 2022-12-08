@@ -4,6 +4,7 @@ from db import *
 import jwt
 import os
 from dotenv import load_dotenv
+
 load_dotenv()
 
 
@@ -48,14 +49,18 @@ def handle_post(request):
                     "Connection": "close",
                     "Set-Cookie": "token="
                     + jwt.encode(
-                        {"username": user[0]["username"]}, os.environ["secret"], algorithm="HS256",
+                        {"username": user[0]["username"]},
+                        os.environ["secret"],
+                        algorithm="HS256",
                     ),
                     "Access-Control-Allow-Origin": "http://localhost:3000",
                     "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
                     "Access-Control-Request-Headers": "Access-Control-Allow-Headers, Content-Type, X-Requested-With, content-type, Origin, Accept, Access-Control-Request-Method, Access-Control-Request-Headers",
                     "Access-Control-Allow-Credentials": "true",
                 },
-                json.dumps({"username": user[0]["username"], "friends": user[0]["friends"]}),
+                json.dumps(
+                    {"username": user[0]["username"], "friends": user[0]["friends"]}
+                ),
             )
 
 
@@ -75,7 +80,9 @@ def handle_get(request):
             },
         )
     try:
-        data = jwt.decode(request.cookies["token"], os.environ["secret"], algorithms=["HS256"])
+        data = jwt.decode(
+            request.cookies["token"], os.environ["secret"], algorithms=["HS256"]
+        )
     except:
         return wrap_response(
             request.version,
@@ -89,7 +96,7 @@ def handle_get(request):
                 "Access-Control-Allow-Credentials": "true",
             },
         )
-    
+
     username = data["username"]
     user = get_user(username)
     print(user)
@@ -118,7 +125,9 @@ def handle_get(request):
                 "Access-Control-Request-Headers": "Access-Control-Allow-Headers, Content-Type, X-Requested-With, content-type, Origin, Accept, Access-Control-Request-Method, Access-Control-Request-Headers",
                 "Access-Control-Allow-Credentials": "true",
             },
-            json.dumps({"username": user[0]["username"], "friends": user[0]["friends"]}),
+            json.dumps(
+                {"username": user[0]["username"], "friends": user[0]["friends"]}
+            ),
         )
 
 

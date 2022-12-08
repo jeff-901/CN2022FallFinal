@@ -5,7 +5,7 @@ from utils import *
 import time
 
 from db import *
-import handle_session, handle_user, handle_friend
+import handle_session, handle_user, handle_friend, handle_message
 
 # thread function
 def threaded(c):
@@ -70,6 +70,13 @@ def threaded(c):
             c.send(handle_friend.handle_post(request))
         elif request.method == "DELETE":
             c.send(handle_friend.handle_delete(request))
+        else:
+            c.send(wrap_response(request.version, 501, {"Connection": "close"},))
+    elif request.path[: len("/api/messages")] == "/api/messages":
+        if request.method == "POST":
+            c.send(handle_message.handle_post(request))
+        elif request.method == "GET":
+            c.send(handle_message.handle_get(request))
         else:
             c.send(wrap_response(request.version, 501, {"Connection": "close"},))
     else:

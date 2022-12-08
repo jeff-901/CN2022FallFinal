@@ -9,17 +9,19 @@ import Paper from "@mui/material/Paper";
 import { createTheme } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { MessageLeft, MessageRight } from "../components/Message";
-import { TextInput } from "../components/TextInput";
+import TextInput from "../components/TextInput";
 import AddFriend from "../components/AddFriend";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
+import { useEffect } from "react";
+import { MessageAPI } from "../api";
 // import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 const useStyles = makeStyles({
   paper: {
-    width: "80vw",
-    height: "80vh",
+    width: "80%",
+    height: "90vh",
     maxWidth: "500px",
     maxHeight: "700px",
     display: "flex",
@@ -48,11 +50,24 @@ const useStyles = makeStyles({
     overflowY: "scroll",
     height: "calc( 100% - 80px )",
   },
+  body: {
+    backgroundColor: "#eeeeee",
+    display: "block",
+    width: "75%",
+    height: "75%",
+    float: "right",
+    padding: "10px",
+  },
   sidebar: {
     width: "15%",
     height: "100%",
     float: "left",
-    "overflow-y": "scroll",
+    margin: "10px",
+    padding: "10px",
+    alignItems: "center",
+    flexDirection: "column",
+    justifyContent: "center",
+    overflowY: "scroll",
     backgroundColor: "#2196f3",
   },
   chatroom: {
@@ -65,6 +80,21 @@ const useStyles = makeStyles({
 export default function Chatroom({ user, setUser }) {
   const classes = useStyles();
   const [name, setName] = useState("");
+  const [friend, setFriend] = useState("");
+  const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    const fetchFriends = async () => {
+      console.log(`friend: ${friend}`);
+      if (friend != "") {
+        console.log(`get messages ${friend}`);
+        let msgs = await MessageAPI.getMessages(friend);
+        setMessages(msgs);
+      }
+    };
+    fetchFriends();
+  }, [friend]);
+
   return (
     <div className={classes.chatroom}>
       <div className={classes.sidebar}>
@@ -75,51 +105,63 @@ export default function Chatroom({ user, setUser }) {
             return (
               <ListItem disablePadding key={x}>
                 <ListItemButton>
-                  <ListItemText primary={x}/>
+                  <ListItemText
+                    primary={x}
+                    onClick={() => {
+                      setFriend(x);
+                    }}
+                  />
                 </ListItemButton>
               </ListItem>
             );
           })}
         </List>
       </div>
-      <div className={classes.container}>
-        <Paper className={classes.paper} zdepth={2}>
-          <Paper id="style-1" className={classes.messagesBody}>
-            <MessageLeft
-              message="あめんぼあかいなあいうえお"
-              timestamp="MM/DD 00:00"
-              // photoURL="https://lh3.googleusercontent.com/a-/AOh14Gi4vkKYlfrbJ0QLJTg_DLjcYyyK7fYoWRpz2r4s=s96-c"
-              photoURL=""
-              displayName=""
-              avatarDisp={true}
-            />
-            <MessageLeft
-              message="xxxxxhttps://yahoo.co.jp xxxxxxxxxあめんぼあかいなあいうえおあいうえおかきくけこさぼあかいなあいうえおあいうえおかきくけこさぼあかいなあいうえおあいうえおかきくけこさいすせそ"
-              timestamp="MM/DD 00:00"
-              photoURL=""
-              displayName="テスト"
-              avatarDisp={false}
-            />
-            <MessageRight
-              message="messageRあめんぼあかいなあいうえおあめんぼあかいなあいうえおあめんぼあかいなあいうえお"
-              timestamp="MM/DD 00:00"
-              // photoURL="https://lh3.googleusercontent.com/a-/AOh14Gi4vkKYlfrbJ0QLJTg_DLjcYyyK7fYoWRpz2r4s=s96-c"
-              photoURL=""
-              displayName="まさりぶ"
-              avatarDisp={true}
-            />
-            <MessageRight
-              message="messageRあめんぼあかいなあいうえおあめんぼあかいなあいうえお"
-              timestamp="MM/DD 00:00"
-              // photoURL="https://lh3.googleusercontent.com/a-/AOh14Gi4vkKYlfrbJ0QLJTg_DLjcYyyK7fYoWRpz2r4s=s96-c"
-              photoURL=""
-              displayName="まさりぶ"
-              avatarDisp={false}
+      {/* <div className={classes.container}> */}
+      {/* <Paper className={classes.paper} zdepth={2}> */}
+      {/*  */}
+      <div className="Body" id="Body">
+        {friend === "" ? (
+          <h1>Choose a friend</h1>
+        ) : (
+          <Paper className={classes.paper} zdepth={2}>
+            <Paper id="style-1" className={classes.messagesBody}>
+              {messages.map((msg) => {
+                if (msg.senders.split(",")[0] !== user.username) {
+                  return (
+                    <MessageLeft
+                      message={msg.msg}
+                      timestamp={msg.timestamp * 1000}
+                      // photoURL="https://lh3.googleusercontent.com/a-/AOh14Gi4vkKYlfrbJ0QLJTg_DLjcYyyK7fYoWRpz2r4s=s96-c"
+                      photoURL=""
+                      displayName={friend}
+                      avatarDisp={true}
+                    />
+                  );
+                } else {
+                  return (
+                    <MessageRight
+                      message={msg.msg}
+                      timestamp={msg.timestamp * 1000}
+                      // photoURL="https://lh3.googleusercontent.com/a-/AOh14Gi4vkKYlfrbJ0QLJTg_DLjcYyyK7fYoWRpz2r4s=s96-c"
+                      photoURL=""
+                      displayName={user.username}
+                      avatarDisp={true}
+                    />
+                  );
+                }
+              })}
+            </Paper>
+            <TextInput
+              setMessages={setMessages}
+              friend={friend}
+              messages={messages}
+              user={user}
             />
           </Paper>
-          <TextInput />
-        </Paper>
+        )}
       </div>
+      {/* </div> */}
     </div>
   );
 }

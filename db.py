@@ -2,7 +2,9 @@ from pymongo import MongoClient
 import os
 from dotenv import load_dotenv
 import json
+
 load_dotenv()
+
 
 def get_database():
 
@@ -18,18 +20,25 @@ def get_database():
 
 dbname = get_database()
 user_collection = dbname["users"]
-item_1 = {
-    "username": "john",
-    "password": "1234",
-    "friends": []
-}
+message_collection = dbname["messages"]
+# item_1 = {
+#     "username": "john",
+#     "password": "1234",
+#     "friends": []
+# }
 
-item_2 = {
-    "username": "amy",
-    "password": "1234",
-    "friends": []
-}
-user_collection.insert_many([item_1,item_2])
+# item_2 = {
+#     "username": "amy",
+#     "password": "1234",
+#     "friends": []
+# }
+# user_collection.insert_many([item_1,item_2])
+
+# message = {
+#    "senders": "amy,john",
+#    "msg": "hi",
+#    "timestamp": 1670483779
+# }
 
 
 def get_user(username):
@@ -42,14 +51,23 @@ def create_user(user):
     print(f"create users with {json.dumps(user)}")
     return user_collection.insert_one(user)
 
+
 def update_user(user):
     print(f"update user with {json.dumps(user)}")
-    myquery = { "username": { "$regex": user["username"] } }
-    newvalues = { "$set": { "friends": user["friends"] } }
+    myquery = {"username": {"$regex": user["username"]}}
+    newvalues = {"$set": {"friends": user["friends"]}}
     x = user_collection.update_many(myquery, newvalues)
     assert x.modified_count == 1
     return True
 
 
-# for x in get_user("john"):
-#     print(x)
+def create_message(message):
+    print(f"create message with {json.dumps(message)}")
+    return message_collection.insert_one(message)
+
+
+def get_messages(user1, user2):
+    print(f"get message between {user1} and {user2}")
+    myquery = {"senders": {"$regex": f"({user1},{user2}|{user2},{user1})"}}
+    print(myquery)
+    return list(message_collection.find(myquery))

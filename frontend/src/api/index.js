@@ -54,3 +54,17 @@ export const FriendAPI = {
       data: { name },
     }),
 };
+
+export const MessageAPI = {
+  createMessage: (name, msg) =>
+    userRequest({
+      method: "post",
+      url: `/api/messages`,
+      data: { name, msg },
+    }),
+  getMessages: (name) =>
+    userRequest({
+      method: "get",
+      url: `/api/messages/${name}`,
+    }),
+};

@@ -3,6 +3,7 @@ import json
 from utils import *
 from db import *
 import jwt
+import time
 
 load_dotenv()
 
@@ -23,7 +24,7 @@ def handle_post(request: HttpRequest):
                 "Access-Control-Allow-Credentials": "true",
             },
         )
-
+    other_user = other_user[0]
     user = jwt.decode(
         request.cookies["token"], os.environ["secret"], algorithms=["HS256"]
     )
@@ -42,8 +43,13 @@ def handle_post(request: HttpRequest):
             },
         )
     user = user[0]
-    user["friends"].append(data.get("name"))
-    update_user({"username": user["username"], "friends": user["friends"]})
+    message = {
+        "senders": user["username"] + "," + other_user["username"],
+        "msg": data.get("msg"),
+        "timestamp": int(time.time()),
+    }
+    create_message(message)
+    del message["_id"]
     return wrap_response(
         request.version,
         200,
@@ -59,13 +65,14 @@ def handle_post(request: HttpRequest):
             "Access-Control-Request-Headers": "Access-Control-Allow-Headers, Content-Type, X-Requested-With, content-type, Origin, Accept, Access-Control-Request-Method, Access-Control-Request-Headers",
             "Access-Control-Allow-Credentials": "true",
         },
-        json.dumps({"username": user["username"], "friends": user["friends"]}),
+        json.dumps(message),
     )
 
 
-def handle_delete(request: HttpRequest):
-    data = json.loads(request.data)
-    other_user = get_user(data.get("name"))
+def handle_get(request: HttpRequest):
+    other_user_name = request.path[len("/api/messages/") :]
+    print("handle message get data: ", request.data)
+    other_user = get_user(other_user_name)
     if len(other_user) == 0:
         return wrap_response(
             request.version,
@@ -79,7 +86,7 @@ def handle_delete(request: HttpRequest):
                 "Access-Control-Allow-Credentials": "true",
             },
         )
-
+    other_user = other_user[0]
     user = jwt.decode(
         request.cookies["token"], os.environ["secret"], algorithms=["HS256"]
     )
@@ -98,8 +105,11 @@ def handle_delete(request: HttpRequest):
             },
         )
     user = user[0]
-    user["friends"].remove(data.get("name"))
-    update_user({"username": user["username"], "friends": user["friends"]})
+    msgs = get_messages(user["username"], other_user["username"])
+    msgs = sorted(msgs, key=lambda x: x["timestamp"])
+    for msg in msgs:
+        del msg["_id"]
+        print(msg)
     return wrap_response(
         request.version,
         200,
@@ -115,5 +125,5 @@ def handle_delete(request: HttpRequest):
             "Access-Control-Request-Headers": "Access-Control-Allow-Headers, Content-Type, X-Requested-With, content-type, Origin, Accept, Access-Control-Request-Method, Access-Control-Request-Headers",
             "Access-Control-Allow-Credentials": "true",
         },
-        json.dumps({"username": user["username"], "friends": user["friends"]}),
+        json.dumps(msgs),
     )

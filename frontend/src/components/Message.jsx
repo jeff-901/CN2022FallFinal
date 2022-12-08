@@ -134,7 +134,9 @@ export const MessageLeft = (props) => {
             <div>
               <p className={classes.messageContent}>{message}</p>
             </div>
-            <div className={classes.messageTimeStampRight}>{timestamp}</div>
+            <div className={classes.messageTimeStampRight}>
+              {new Date(timestamp).toUTCString()}
+            </div>
           </div>
         </div>
       </div>
@@ -150,7 +152,9 @@ export const MessageRight = (props) => {
     <div className={classes.messageRowRight}>
       <div className={classes.messageOrange}>
         <p className={classes.messageContent}>{message}</p>
-        <div className={classes.messageTimeStampRight}>{timestamp}</div>
+        <div className={classes.messageTimeStampRight}>
+          {new Date(timestamp).toUTCString()}
+        </div>
       </div>
     </div>
   );

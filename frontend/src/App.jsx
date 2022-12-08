@@ -3,7 +3,7 @@ import { Route, Switch, Redirect } from "react-router-dom";
 // hooks
 import { useState, useEffect } from "react";
 import { styled } from "@mui/material/styles";
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from "@mui/styles";
 // mui
 import { createTheme } from "@mui/material/styles";
 import { ThemeProvider } from "@mui/material/styles";
@@ -49,7 +49,6 @@ const useStyles = makeStyles({
     padding: 0,
   },
 });
-
 
 function App() {
   // drawer functions
@@ -101,33 +100,33 @@ function App() {
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <DrawerHeader />
           {/* <Container> */}
-            {fetching ? (
-              <CircularProgress />
-            ) : (
-              <Switch>
-                <Route exact path="/">
-                  {isLogin ? (
-                    <Chatroom user={user} setUser={setUser} />
-                  ) : (
-                    <Login setUser={setUser} setIsLogin={setIsLogin} />
-                  )}
-                </Route>
-                {/* <Route path="/reservation">
+          {fetching ? (
+            <CircularProgress />
+          ) : (
+            <Switch>
+              <Route exact path="/">
+                {isLogin ? (
+                  <Chatroom user={user} setUser={setUser} />
+                ) : (
+                  <Login setUser={setUser} setIsLogin={setIsLogin} />
+                )}
+              </Route>
+              {/* <Route path="/reservation">
                   {isLogin ? (
                     <ReservationSearch user={user} />
                   ) : (
                     <Redirect to="/" />
                   )}
                 </Route> */}
-                {/* <Route path="/status">
+              {/* <Route path="/status">
                   {isLogin ? (
                     <ReservationStatus user={user} />
                   ) : (
                     <Redirect to="/" />
                   )}
                 </Route> */}
-              </Switch>
-            )}
+            </Switch>
+          )}
           {/* </Container> */}
         </Box>
       </Box>
