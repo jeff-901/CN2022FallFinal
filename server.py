@@ -83,11 +83,11 @@ def threaded(c):
         c.send(
             wrap_response(
                 request.version,
-                501,
+                200,
                 {
                     "Content-Type": "text/html",
                     "Connection": "close",
-                    "Access-Control-Allow-Origin": "http://localhost:3000",
+                    "Access-Control-Allow-Origin": "http://localhost:3000/",
                     "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
                     "Access-Control-Request-Headers": "Access-Control-Allow-Headers, Cookie, Content-Type, X-Requested-With, content-type, Origin, Accept, Access-Control-Request-Method, Access-Control-Request-Headers",
                     "Access-Control-Allow-Credentials": "true",

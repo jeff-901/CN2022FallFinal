@@ -35,6 +35,7 @@ def handle_post(request):
                 },
                 json.dumps({"message": "Already exist"}),
             )
+        user["friends"] = []
         user_obj = create_user(user)
         return wrap_response(
             request.version,
@@ -53,7 +54,7 @@ def handle_post(request):
                     algorithm="HS256",
                 ),
             },
-            json.dumps({"username": user["username"]}),
+            json.dumps({"username": user["username"], "friends": []}),
         )
 
     except Exception as e:
