@@ -68,3 +68,13 @@ export const MessageAPI = {
       url: `/api/messages/${name}`,
     }),
 };
+
+export const FileAPI = {
+
+};
+
+export const VideoAPI = {
+  
+};
+
+
