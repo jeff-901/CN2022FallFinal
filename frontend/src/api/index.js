@@ -74,7 +74,12 @@ export const FileAPI = {
 };
 
 export const VideoAPI = {
-  
+    createVideo:(name) =>
+      userRequest({
+        method :"post",
+        url: `/api/videos`,
+        data:{name},
+      }),
 };
 
 

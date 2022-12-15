@@ -5,7 +5,7 @@ import { makeStyles } from "@mui/styles";
 import SendIcon from "@mui/icons-material/Send";
 import Button from "@mui/material/Button";
 import { createTheme } from "@mui/material";
-import { MessageAPI } from "../api";
+import { MessageAPI, VideoAPI } from "../api";
 import FileUploadRoundedIcon from '@mui/icons-material/FileUploadRounded';
 import VideoCallRoundedIcon from '@mui/icons-material/VideoCallRounded';
 const theme = createTheme();
@@ -25,7 +25,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function TextInput({ user, friend, setMessages, messages }) {
+export default function TextInput({ user, friend, setMessages, messages,stream,setStream}) {
   const classes = useStyles();
   const [text, setText] = useState("");
   const sendMsg = async () => {
@@ -35,6 +35,13 @@ export default function TextInput({ user, friend, setMessages, messages }) {
     setMessages([...messages, res]);
     setText("");
   };
+
+  //const [stream, setStream] = useState(false);
+  const handleStream = async() =>{
+    setStream(!stream);
+    let res = await VideoAPI.createVideo(user);
+    
+  }
   return (
     <>
       <form className={classes.wrapForm} noValidate autoComplete="off">
@@ -63,7 +70,7 @@ export default function TextInput({ user, friend, setMessages, messages }) {
           color="primary"
           size = "small"
           className={classes.button}
-          onClick={sendMsg}
+          onClick={handleStream}
         >
           <VideoCallRoundedIcon/>
         </Button>
@@ -77,6 +84,7 @@ export default function TextInput({ user, friend, setMessages, messages }) {
             setText(event.target.value);
           }}
         />
+        
         <Button
           variant="contained"
           color="primary"

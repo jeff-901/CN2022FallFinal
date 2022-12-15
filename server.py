@@ -6,7 +6,7 @@ import time
 
 from db import *
 import handle_session, handle_user, handle_friend, handle_message
-
+import handle_video
 # thread function
 def threaded(c):
     data = c.recv(1024)
@@ -79,6 +79,10 @@ def threaded(c):
             c.send(handle_message.handle_get(request))
         else:
             c.send(wrap_response(request.version, 501, {"Connection": "close"},))
+    elif request.path == "/api/videos":
+        print('test')
+        c.send(handle_video.return_video_response(request))
+        #c.send(handle_message.handle_post(request))
     else:
         c.send(
             wrap_response(

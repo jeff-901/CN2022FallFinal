@@ -82,7 +82,7 @@ export default function Chatroom({ user, setUser }) {
   const [name, setName] = useState("");
   const [friend, setFriend] = useState("");
   const [messages, setMessages] = useState([]);
-
+  const [stream,setStream] = useState(false);
   useEffect(() => {
     const fetchFriends = async () => {
       console.log(`friend: ${friend}`);
@@ -124,6 +124,7 @@ export default function Chatroom({ user, setUser }) {
         {friend === "" ? (
           <h1>Choose a friend</h1>
         ) : (
+          <div>
           <Paper className={classes.paper} zdepth={2}>
             <Paper id="style-1" className={classes.messagesBody}>
               {messages.map((msg) => {
@@ -157,9 +158,19 @@ export default function Chatroom({ user, setUser }) {
               friend={friend}
               messages={messages}
               user={user}
+              stream = {stream}
+              setStream = {setStream}
             />
           </Paper>
+
+          {!stream ?(<h1>test_function</h1>)
+            :(<>
+            <h2>test_</h2>
+            <img src="{{ url_for('aaa') }}" width="100%"/>
+            </>)}
+          </div>
         )}
+        
       </div>
       {/* </div> */}
     </div>
