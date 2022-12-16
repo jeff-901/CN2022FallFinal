@@ -119,9 +119,13 @@ const useStyles = makeStyles({
 });
 
 const downloadFile = async (filename, file_id) => {
-  let res = await FileAPI.getFile(file_id);
-  console.log(`length: ${res.length}`);
-  fileDownload(res, filename);
+  fetch(import.meta.env.VITE_USER_BACKEND_URL + "/api/files/" + file_id).then(
+    function (res) {
+      console.log(
+        res.arrayBuffer().then((buffer) => fileDownload(buffer, filename))
+      );
+    }
+  );
 };
 
 export const MessageLeft = (props) => {
