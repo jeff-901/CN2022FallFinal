@@ -82,13 +82,14 @@ export default function Chatroom({ user, setUser }) {
   const [name, setName] = useState("");
   const [friend, setFriend] = useState("");
   const [messages, setMessages] = useState([]);
-  const [stream,setStream] = useState(false);
+  const [stream, setStream] = useState(false);
   useEffect(() => {
     const fetchFriends = async () => {
       console.log(`friend: ${friend}`);
       if (friend != "") {
         console.log(`get messages ${friend}`);
         let msgs = await MessageAPI.getMessages(friend);
+        console.log(msgs);
         setMessages(msgs);
       }
     };
@@ -125,52 +126,54 @@ export default function Chatroom({ user, setUser }) {
           <h1>Choose a friend</h1>
         ) : (
           <div>
-          <Paper className={classes.paper} zdepth={2}>
-            <Paper id="style-1" className={classes.messagesBody}>
-              {messages.map((msg) => {
-                if (msg.senders.split(",")[0] !== user.username) {
-                  return (
-                    <MessageLeft
-                      message={msg.msg}
-                      timestamp={msg.timestamp * 1000}
-                      // photoURL="https://lh3.googleusercontent.com/a-/AOh14Gi4vkKYlfrbJ0QLJTg_DLjcYyyK7fYoWRpz2r4s=s96-c"
-                      photoURL=""
-                      displayName={friend}
-                      avatarDisp={true}
-                    />
-                  );
-                } else {
-                  return (
-                    <MessageRight
-                      message={msg.msg}
-                      timestamp={msg.timestamp * 1000}
-                      // photoURL="https://lh3.googleusercontent.com/a-/AOh14Gi4vkKYlfrbJ0QLJTg_DLjcYyyK7fYoWRpz2r4s=s96-c"
-                      photoURL=""
-                      displayName={user.username}
-                      avatarDisp={true}
-                    />
-                  );
-                }
-              })}
+            <Paper className={classes.paper} zdepth={2}>
+              <Paper id="style-1" className={classes.messagesBody}>
+                {messages.map((msg) => {
+                  if (msg.senders.split(",")[0] !== user.username) {
+                    return (
+                      <MessageLeft
+                        message={msg.msg}
+                        timestamp={msg.timestamp * 1000}
+                        // photoURL="https://lh3.googleusercontent.com/a-/AOh14Gi4vkKYlfrbJ0QLJTg_DLjcYyyK7fYoWRpz2r4s=s96-c"
+                        photoURL=""
+                        displayName={friend}
+                        avatarDisp={true}
+                      />
+                    );
+                  } else {
+                    return (
+                      <MessageRight
+                        message={msg.msg}
+                        timestamp={msg.timestamp * 1000}
+                        // photoURL="https://lh3.googleusercontent.com/a-/AOh14Gi4vkKYlfrbJ0QLJTg_DLjcYyyK7fYoWRpz2r4s=s96-c"
+                        photoURL=""
+                        displayName={user.username}
+                        avatarDisp={true}
+                      />
+                    );
+                  }
+                })}
+              </Paper>
+              <TextInput
+                setMessages={setMessages}
+                friend={friend}
+                messages={messages}
+                user={user}
+                stream={stream}
+                setStream={setStream}
+              />
             </Paper>
-            <TextInput
-              setMessages={setMessages}
-              friend={friend}
-              messages={messages}
-              user={user}
-              stream = {stream}
-              setStream = {setStream}
-            />
-          </Paper>
 
-          {!stream ?(<h1>test_function</h1>)
-            :(<>
-            <h2>test_</h2>
-            <img src="{{ url_for('aaa') }}" width="100%"/>
-            </>)}
+            {!stream ? (
+              <h1>test_function</h1>
+            ) : (
+              <>
+                <h2>test_</h2>
+                <img src="{{ url_for('aaa') }}" width="100%" />
+              </>
+            )}
           </div>
         )}
-        
       </div>
       {/* </div> */}
     </div>

@@ -108,8 +108,9 @@ def handle_get(request: HttpRequest):
     msgs = get_messages(user["username"], other_user["username"])
     msgs = sorted(msgs, key=lambda x: x["timestamp"])
     for msg in msgs:
-        del msg["_id"]
-        print(msg)
+        msg["_id"] = str(msg["_id"])
+        # if type(msg["msg"]) == str:
+        #     msg["msg"]= json.loads(msg["msg"])
     return wrap_response(
         request.version,
         200,

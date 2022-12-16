@@ -70,16 +70,20 @@ export const MessageAPI = {
 };
 
 export const FileAPI = {
-
+  createFile: (file, data) =>
+    userRequest({
+      Headers: { type: file["type"] },
+      method: "post",
+      url: `/api/files/?file=${file["name"]}`,
+      data: data,
+    }),
 };
 
 export const VideoAPI = {
-    createVideo:(name) =>
-      userRequest({
-        method :"post",
-        url: `/api/videos`,
-        data:{name},
-      }),
+  createVideo: (name) =>
+    userRequest({
+      method: "post",
+      url: `/api/videos`,
+      data: { name },
+    }),
 };
-
-

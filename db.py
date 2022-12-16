@@ -1,7 +1,8 @@
 from pymongo import MongoClient
-import os
+import os, math
 from dotenv import load_dotenv
 import json
+from bson.raw_bson import RawBSONDocument
 
 load_dotenv()
 
@@ -21,6 +22,9 @@ def get_database():
 dbname = get_database()
 user_collection = dbname["users"]
 message_collection = dbname["messages"]
+file_collection = dbname["file"]
+file_chunk_collection = dbname["chunk"]
+CHUNKSIZE = 16000000
 # item_1 = {
 #     "username": "john",
 #     "password": "1234",
@@ -71,3 +75,21 @@ def get_messages(user1, user2):
     myquery = {"senders": {"$regex": f"({user1},{user2}|{user2},{user1})"}}
     print(myquery)
     return list(message_collection.find(myquery))
+
+
+def create_file(file, data):
+    print(f"create file with {file}")
+    data += b"\0"
+    insert_file = {"name": file, "chunks": []}
+    chunk_num = math.ceil(len(data) / CHUNKSIZE)
+    print("chunk num: " + str(chunk_num))
+    chunk_id = []
+    for i in range(chunk_num):
+        chunk = file_chunk_collection.insert_one(
+            {"data": data[i * CHUNKSIZE : (i + 1) * CHUNKSIZE]}
+        )
+        chunk_id.append(str(chunk.inserted_id))
+    print(chunk_id)
+    insert_file["chunks"] = chunk_id
+    file_meta = file_collection.insert_one(insert_file)
+    return str(file_meta.inserted_id)

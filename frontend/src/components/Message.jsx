@@ -4,6 +4,7 @@ import { createStyles } from "@mui/material/styles";
 import { createTheme } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import { deepOrange } from "@mui/material/colors";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
 const theme = createTheme();
 const useStyles = makeStyles({
   messageRow: {
@@ -115,46 +116,57 @@ const useStyles = makeStyles({
 });
 
 export const MessageLeft = (props) => {
-  const message = props.message ? props.message : "no message";
+  const message = props.message;
   const timestamp = props.timestamp ? props.timestamp : "";
   const photoURL = props.photoURL ? props.photoURL : "dummy.js";
-  const displayName = props.displayName ? props.displayName : "名無しさん";
+  const displayName = props.displayName ? props.displayName : "Anonymous";
   const classes = useStyles();
   return (
-    <>
-      <div className={classes.messageRow}>
-        <Avatar
-          alt={displayName}
-          className={classes.orange}
-          src={photoURL}
-        ></Avatar>
-        <div>
-          <div className={classes.displayName}>{displayName}</div>
-          <div className={classes.messageBlue}>
-            <div>
-              <p className={classes.messageContent}>{message}</p>
-            </div>
-            <div className={classes.messageTimeStampRight}>
+    <div className={classes.messageRow}>
+      <Avatar
+        alt={displayName}
+        className={classes.orange}
+        src={photoURL}
+      ></Avatar>
+      <div>
+        <div className={classes.displayName}>{displayName}</div>
+        <div className={classes.messageBlue}>
+          {message.type === "msg" ? (
+            <p className={classes.messageContent}>{message.data}</p>
+          ) : (
+            <>
+              <FileDownloadIcon />
+              {message.name}
+            </>
+          )}
+          {/* <div className={classes.messageTimeStampRight}>
               {new Date(timestamp).toUTCString()}
-            </div>
-          </div>
+            </div> */}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
 export const MessageRight = (props) => {
   const classes = useStyles();
-  const message = props.message ? props.message : "no message";
+  const message = props.message;
   const timestamp = props.timestamp ? props.timestamp : "";
   return (
     <div className={classes.messageRowRight}>
       <div className={classes.messageOrange}>
-        <p className={classes.messageContent}>{message}</p>
-        <div className={classes.messageTimeStampRight}>
+        {message.type === "msg" ? (
+          <p className={classes.messageContent}>{message.data}</p>
+        ) : (
+          <p>
+            <FileDownloadIcon />
+            {message.name}
+          </p>
+        )}
+
+        {/* <div className={classes.messageTimeStampRight}>
           {new Date(timestamp).toUTCString()}
-        </div>
+        </div> */}
       </div>
     </div>
   );

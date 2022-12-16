@@ -5,9 +5,9 @@ import { makeStyles } from "@mui/styles";
 import SendIcon from "@mui/icons-material/Send";
 import Button from "@mui/material/Button";
 import { createTheme } from "@mui/material";
-import { MessageAPI, VideoAPI } from "../api";
-import FileUploadRoundedIcon from '@mui/icons-material/FileUploadRounded';
-import VideoCallRoundedIcon from '@mui/icons-material/VideoCallRounded';
+import { MessageAPI, VideoAPI, FileAPI } from "../api";
+import FileUploadRoundedIcon from "@mui/icons-material/FileUploadRounded";
+import VideoCallRoundedIcon from "@mui/icons-material/VideoCallRounded";
 const theme = createTheme();
 
 const useStyles = makeStyles({
@@ -25,54 +25,95 @@ const useStyles = makeStyles({
   },
 });
 
-export default function TextInput({ user, friend, setMessages, messages,stream,setStream}) {
+export default function TextInput({
+  user,
+  friend,
+  setMessages,
+  messages,
+  stream,
+  setStream,
+}) {
   const classes = useStyles();
   const [text, setText] = useState("");
+  const [file, setFile] = useState("");
+
+  function getArrayBuffer(file) {
+    return new Promise((resolve, reject) => {
+      // STEP 3: 轉成 ArrayBuffer, i.e., reader.result
+      const reader = new FileReader();
+      reader.addEventListener("load", () => {
+        resolve(reader.result);
+      });
+      reader.readAsArrayBuffer(file);
+    });
+  }
+
   const sendMsg = async () => {
-    console.log(`${user.username} send to ${friend} ${text}`);
-    let res = await MessageAPI.createMessage(friend, text);
-    console.log(res);
-    setMessages([...messages, res]);
-    setText("");
+    console.log(`send msg file: ${file}`);
+    if (file !== "") {
+      console.log(`${user.username} send to ${friend} ${file}`);
+      const arrayBuffer = await getArrayBuffer(file);
+      let res_file = await FileAPI.createFile(file, arrayBuffer, friend);
+      let res_msg = await MessageAPI.createMessage(friend, {
+        type: "file",
+        name: file["name"],
+        id: res_file.id,
+      });
+      setMessages([...messages, res_msg]);
+      setFile("");
+    }
+    if (text !== "") {
+      console.log(`${user.username} send to ${friend} ${text}`);
+      let res = await MessageAPI.createMessage(friend, {
+        type: "msg",
+        data: text,
+      });
+      console.log(res);
+      setMessages([...messages, res]);
+      setText("");
+    }
   };
 
   //const [stream, setStream] = useState(false);
-  const handleStream = async() =>{
+  const handleStream = async () => {
     setStream(!stream);
     let res = await VideoAPI.createVideo(user);
-    
-  }
+  };
+
   return (
     <>
       <form className={classes.wrapForm} noValidate autoComplete="off">
-      <input
-        accept="*"
-        type="file"
-        id="upload_file"
-        name="myfile"
-        hidden
+        <input
+          accept="*"
+          type="file"
+          id="upload_file"
+          name="myfile"
+          hidden
+          onChange={(e) => {
+            setFile(e.target.files[0]);
+            console.log(e.target.files);
+          }}
         />
-        
         <Button
           variant="outlined"
           color="primary"
-          size = "medium"
+          size="medium"
           className={classes.button}
-          onClick={sendMsg}
+          // onClick={sendMsg}
         >
-          <label for="upload_file" >
-          <FileUploadRoundedIcon/>
-           </label>
+          <label for="upload_file">
+            <FileUploadRoundedIcon />
+          </label>
         </Button>
-       
+
         <Button
           variant="outlined"
           color="primary"
-          size = "small"
+          size="small"
           className={classes.button}
           onClick={handleStream}
         >
-          <VideoCallRoundedIcon/>
+          <VideoCallRoundedIcon />
         </Button>
         <TextField
           id="standard-text"
@@ -84,7 +125,7 @@ export default function TextInput({ user, friend, setMessages, messages,stream,s
             setText(event.target.value);
           }}
         />
-        
+
         <Button
           variant="contained"
           color="primary"
