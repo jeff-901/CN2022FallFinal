@@ -10,7 +10,7 @@ import handle_video, handle_file
 
 # thread function
 def threaded(c):
-    data = c.recv(1024)
+    data = c.recv(4096)
     if not data:
         print("Bye")
     request = parse_request(data)
@@ -82,7 +82,9 @@ def threaded(c):
             c.send(wrap_response(request.version, 501, {"Connection": "close"},))
     elif request.path[: len("/api/files")] == "/api/files":
         if request.method == "POST":
-            c.send(handle_file.handle_post(request))
+            c.send(handle_file.handle_post(c, request))
+        elif request.method == "GET":
+            c.send(handle_file.handle_get(request))
         else:
             c.send(wrap_response(request.version, 501, {"Connection": "close"},))
     elif request.path == "/api/videos":

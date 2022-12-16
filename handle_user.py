@@ -10,7 +10,7 @@ load_dotenv()
 
 def handle_post(request):
     try:
-        user = json.loads(request.data)
+        user = json.loads(request.data.decode("utf-8"))
         if "username" not in user or "password" not in user:
             return wrap_response(
                 request.version, 200, {}, "Data must contain username and password"

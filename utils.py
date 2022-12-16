@@ -13,36 +13,38 @@ class HttpRequest:
             for cookie in cookies:
                 key, value = cookie.split("=")
                 self.cookies[key.strip()] = value.strip()
-        print("cookies", self.cookies)
-
         self.data = data
 
     def __repr__(self):
         req = f"{self.method} {self.path} {self.version}\r\n"
         for key in self.headers:
             req += f"{key}: {self.headers[key]}\r\n"
-        req += "\r\n" + self.data
+        try:
+            d = self.data.decode("utf-8")
+            # req += "\r\n" + d
+        except:
+            pass
         return req
 
 
 def parse_request(http_request):
-    lines = http_request.decode().split("\r\n")
-    first_line = lines[0].split(" ")
+    lines = http_request.split(b"\r\n")
+    first_line = lines[0].decode().split(" ")
     http_method = first_line[0]
     path = first_line[1]
     version = first_line[2]
     headers = {}
     i = 1
     while True:
-        if lines[i] == "":
+        if lines[i] == b"":
             break
         # print(lines[i])
-        key_value = lines[i].split(": ")
+        key_value = lines[i].decode().split(": ")
         headers[key_value[0]] = key_value[1]
         i += 1
     i += 1
     # print("lines[-1]:", lines[-1])
-    data = lines[i]
+    data = b"\r\n".join(lines[i:])
     # print(http_method, path, version)
     # print(headers)
     # print("data:", data)
@@ -55,9 +57,13 @@ def wrap_response(version, status_code, headers, data=""):
         res += f"{key}: {headers[key]}\r\n"
     res += "\r\n"
     print(res)
-    res += data
+    res = res.encode("utf-8")
+    if type(data) == str:
+        res += data.encode("utf-8")
+    else:
+        res += data
     # print(res)
-    return res.encode("utf-8")
+    return res
 
 
 basic_header = {

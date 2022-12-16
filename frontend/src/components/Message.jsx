@@ -5,6 +5,9 @@ import { createTheme } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import { deepOrange } from "@mui/material/colors";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import { FileAPI } from "../api";
+import fileDownload from "react-file-download";
+
 const theme = createTheme();
 const useStyles = makeStyles({
   messageRow: {
@@ -115,6 +118,12 @@ const useStyles = makeStyles({
   },
 });
 
+const downloadFile = async (filename, file_id) => {
+  let res = await FileAPI.getFile(file_id);
+  console.log(`length: ${res.length}`);
+  fileDownload(res, filename);
+};
+
 export const MessageLeft = (props) => {
   const message = props.message;
   const timestamp = props.timestamp ? props.timestamp : "";
@@ -134,10 +143,15 @@ export const MessageLeft = (props) => {
           {message.type === "msg" ? (
             <p className={classes.messageContent}>{message.data}</p>
           ) : (
-            <>
+            <p
+              className={classes.messageContent}
+              onClick={() => {
+                downloadFile(message.name, message.id);
+              }}
+            >
               <FileDownloadIcon />
               {message.name}
-            </>
+            </p>
           )}
           {/* <div className={classes.messageTimeStampRight}>
               {new Date(timestamp).toUTCString()}
@@ -158,7 +172,11 @@ export const MessageRight = (props) => {
         {message.type === "msg" ? (
           <p className={classes.messageContent}>{message.data}</p>
         ) : (
-          <p>
+          <p
+            onClick={() => {
+              downloadFile(message.name, message.id);
+            }}
+          >
             <FileDownloadIcon />
             {message.name}
           </p>

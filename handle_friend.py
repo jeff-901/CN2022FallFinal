@@ -8,7 +8,7 @@ load_dotenv()
 
 
 def handle_post(request: HttpRequest):
-    data = json.loads(request.data)
+    data = json.loads(request.data.decode("utf-8"))
     other_user = get_user(data.get("name"))
     if len(other_user) == 0:
         return wrap_response(
@@ -64,7 +64,7 @@ def handle_post(request: HttpRequest):
 
 
 def handle_delete(request: HttpRequest):
-    data = json.loads(request.data)
+    data = json.loads(request.data.decode("utf-8"))
     other_user = get_user(data.get("name"))
     if len(other_user) == 0:
         return wrap_response(

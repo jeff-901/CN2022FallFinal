@@ -9,7 +9,7 @@ load_dotenv()
 
 
 def handle_post(request):
-    data = json.loads(request.data)
+    data = json.loads(request.data.decode("utf-8"))
     user = get_user(data.get("username"))
     if len(user) == 0:
         return wrap_response(

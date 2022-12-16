@@ -9,7 +9,7 @@ load_dotenv()
 
 
 def handle_post(request: HttpRequest):
-    data = json.loads(request.data)
+    data = json.loads(request.data.decode("utf-8"))
     other_user = get_user(data.get("name"))
     if len(other_user) == 0:
         return wrap_response(
@@ -71,7 +71,7 @@ def handle_post(request: HttpRequest):
 
 def handle_get(request: HttpRequest):
     other_user_name = request.path[len("/api/messages/") :]
-    print("handle message get data: ", request.data)
+    print("handle message get data: ", request.data.decode("utf-8"))
     other_user = get_user(other_user_name)
     if len(other_user) == 0:
         return wrap_response(

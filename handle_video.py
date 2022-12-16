@@ -50,7 +50,7 @@ def index():
 
 
 def return_video_response(request: HttpRequest):
-    data = json.loads(request.data)
+    data = json.loads(request.data.decode("utf-8"))
     return wrap_response(
         request.version,
         404,

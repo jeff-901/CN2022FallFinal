@@ -8,17 +8,28 @@ import time
 load_dotenv()
 
 
-def handle_post(request: HttpRequest):
+def handle_post(c, request: HttpRequest):
     filename = request.path[len("/api/files/?file=") :]
-    print(type(request.data))
-    file_meta = create_file(filename, request.data.encode("utf-8"))
-    # file_meta["_id"] = str(file_meta["_id"])
+    # print(type(request.data))
+    size = int(request.headers["Content-Length"])
+    cur = len(request.data)
+    # print(request.data)
+    print(cur, len(request.data), size)
+    data = request.data
+    while cur < size:
+        left = c.recv(4096)
+        cur += len(left)
+        data += left
+        print(cur, len(left), len(data), size)
+    print(size, len(data))
+    file_meta = create_file(filename, data)
+
     return wrap_response(
         request.version,
         200,
         {
             "Content-Type": "application/json",
-            "Connection": "close",
+            "Connection": "keep-alive",
             "Access-Control-Allow-Origin": "http://localhost:3000",
             "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
             "Access-Control-Request-Headers": "Access-Control-Allow-Headers, Content-Type, X-Requested-With, content-type, Origin, Accept, Access-Control-Request-Method, Access-Control-Request-Headers",
@@ -28,8 +39,42 @@ def handle_post(request: HttpRequest):
     )
 
 
+def handle_get(request: HttpRequest):
+    file_id = request.path[len("/api/files/") :]
+    data = get_file(file_id)
+    print(len(data))
+    if data != None:
+        return wrap_response(
+            request.version,
+            200,
+            {
+                "Content-Type": "application/pdf",
+                "Content-Length": len(data),
+                "Connection": "close",
+                "Access-Control-Allow-Origin": "http://localhost:3000",
+                "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+                "Access-Control-Request-Headers": "Access-Control-Allow-Headers, Content-Type, X-Requested-With, content-type, Origin, Accept, Access-Control-Request-Method, Access-Control-Request-Headers",
+                "Access-Control-Allow-Credentials": "true",
+            },
+            data,
+        )
+    else:
+        return wrap_response(
+            request.version,
+            404,
+            {
+                "Content-Type": "application/json",
+                "Connection": "close",
+                "Access-Control-Allow-Origin": "http://localhost:3000",
+                "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+                "Access-Control-Request-Headers": "Access-Control-Allow-Headers, Content-Type, X-Requested-With, content-type, Origin, Accept, Access-Control-Request-Method, Access-Control-Request-Headers",
+                "Access-Control-Allow-Credentials": "true",
+            },
+        )
+
+
 def handle_post_uu(request: HttpRequest):
-    data = json.loads(request.data)
+    data = json.loads(request.data.decode("utf-8"))
     other_user = get_user(data.get("name"))
     # if len(other_user) == 0:
     #     return wrap_response(

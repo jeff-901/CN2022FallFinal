@@ -77,6 +77,11 @@ export const FileAPI = {
       url: `/api/files/?file=${file["name"]}`,
       data: data,
     }),
+  getFile: (file_id) =>
+    userRequest({
+      method: "get",
+      url: `/api/files/${file_id}`,
+    }),
 };
 
 export const VideoAPI = {

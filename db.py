@@ -3,6 +3,7 @@ import os, math
 from dotenv import load_dotenv
 import json
 from bson.raw_bson import RawBSONDocument
+from bson.objectid import ObjectId
 
 load_dotenv()
 
@@ -73,7 +74,7 @@ def create_message(message):
 def get_messages(user1, user2):
     print(f"get message between {user1} and {user2}")
     myquery = {"senders": {"$regex": f"({user1},{user2}|{user2},{user1})"}}
-    print(myquery)
+    # print(myquery)
     return list(message_collection.find(myquery))
 
 
@@ -82,14 +83,28 @@ def create_file(file, data):
     data += b"\0"
     insert_file = {"name": file, "chunks": []}
     chunk_num = math.ceil(len(data) / CHUNKSIZE)
-    print("chunk num: " + str(chunk_num))
     chunk_id = []
     for i in range(chunk_num):
         chunk = file_chunk_collection.insert_one(
             {"data": data[i * CHUNKSIZE : (i + 1) * CHUNKSIZE]}
         )
         chunk_id.append(str(chunk.inserted_id))
-    print(chunk_id)
     insert_file["chunks"] = chunk_id
     file_meta = file_collection.insert_one(insert_file)
     return str(file_meta.inserted_id)
+
+
+def get_file(file_id):
+    print(f"get file: {file_id}")
+    myquery = {"_id": ObjectId(file_id)}
+    files = list(file_collection.find(myquery))
+    if len(files) == 0:
+        return None
+    file = files[0]
+    data = b""
+    for chunk in file["chunks"]:
+        chunk_data = file_chunk_collection.find_one({"_id": ObjectId(chunk)})
+        # print(type(chunk_data["data"]))
+        data += chunk_data["data"]
+    # print(data)
+    return data[:-1]
