@@ -6,7 +6,7 @@ import time
 
 from db import *
 import handle_session, handle_user, handle_friend, handle_message
-import handle_video, handle_file, handle_v
+import handle_file, handle_v
 
 index_html = None
 with open("frontend/dist/index.html", "r") as f:
@@ -116,10 +116,10 @@ def threaded(c):
             c.send(handle_file.handle_get(request))
         else:
             c.send(wrap_response(request.version, 501, {"Connection": "close"},))
-    elif request.path == "/api/videos":
-        print("test")
-        c.send(handle_video.return_video_response(request))
-        # c.send(handle_message.handle_post(request))
+    # elif request.path == "/api/videos":
+    #     print("test")
+    #     c.send(handle_video.return_video_response(request))
+    #     # c.send(handle_message.handle_post(request))
     elif request.path == "/api/video":
         print("test")
         c.send(handle_v.handle_get(request))
