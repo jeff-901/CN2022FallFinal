@@ -9,7 +9,7 @@ import handle_session, handle_user, handle_friend, handle_message
 import handle_video, handle_file, handle_v
 
 index_html = None
-with open("index.html", "r") as f:
+with open("frontend/dist/index.html", "r") as f:
     index_html = f.read()
 
 # thread function
@@ -39,15 +39,20 @@ def threaded(c):
             )
     elif request.path[: len("/assets")] == "/assets":
         data = ""
-        with open(request.path[1:], "r") as f:
+        with open("frontend/dist" + request.path, "r") as f:
             data = f.read()
+        file_type = ""
+        if request.path[-3:] == ".js":
+            file_type = "application/javascript; charset=UTF-8"
+        else:
+            file_type = "text/css; charset=UTF-8"
         if request.method == "GET":
             c.send(
                 wrap_response(
                     request.version,
                     200,
                     {
-                        "Content-Type": "text/html",
+                        "Content-Type": file_type,
                         "Connection": "close",
                         "Access-Control-Allow-Origin": "http://localhost:5556",
                         "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
@@ -123,7 +128,7 @@ def threaded(c):
         c.send(
             wrap_response(
                 request.version,
-                200,
+                404,
                 {
                     "Content-Type": "text/html",
                     "Connection": "close",
