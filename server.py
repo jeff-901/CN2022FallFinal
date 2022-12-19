@@ -7,7 +7,8 @@ import time
 from db import *
 import handle_session, handle_user, handle_friend, handle_message
 import handle_file, handle_v
-
+from dotenv import load_dotenv
+load_dotenv()
 index_html = None
 with open("frontend/dist/index.html", "r") as f:
     index_html = f.read()
@@ -29,7 +30,7 @@ def threaded(c):
                     {
                         "Content-Type": "text/html",
                         "Connection": "close",
-                        "Access-Control-Allow-Origin": "http://localhost:5556",
+                        "Access-Control-Allow-Origin": "https://cnfinal2022.herokuapp.com",
                         "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
                         "Access-Control-Request-Headers": "Access-Control-Allow-Headers, Content-Type, X-Requested-With, content-type, Origin, Accept, Access-Control-Request-Method, Access-Control-Request-Headers",
                         "Access-Control-Allow-Credentials": "true",
@@ -54,7 +55,7 @@ def threaded(c):
                     {
                         "Content-Type": file_type,
                         "Connection": "close",
-                        "Access-Control-Allow-Origin": "http://localhost:5556",
+                        "Access-Control-Allow-Origin": "https://cnfinal2022.herokuapp.com",
                         "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
                         "Access-Control-Request-Headers": "Access-Control-Allow-Headers, Content-Type, X-Requested-With, content-type, Origin, Accept, Access-Control-Request-Method, Access-Control-Request-Headers",
                         "Access-Control-Allow-Credentials": "true",
@@ -70,7 +71,7 @@ def threaded(c):
     #                 {
     #                     "Content-Type": "text/html",
     #                     "Connection": "close",
-    #                     "Access-Control-Allow-Origin": "http://localhost:3000",
+    #                     "Access-Control-Allow-Origin": "https://cnfinal2022.herokuapp.com",
     #                     "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
     #                     "Access-Control-Request-Headers": "Access-Control-Allow-Headers, Content-Type, X-Requested-With, content-type, Origin, Accept, Access-Control-Request-Method, Access-Control-Request-Headers",
     #                     "Access-Control-Allow-Credentials": "true",
@@ -132,7 +133,7 @@ def threaded(c):
                 {
                     "Content-Type": "text/html",
                     "Connection": "close",
-                    "Access-Control-Allow-Origin": "http://localhost:3000/",
+                    "Access-Control-Allow-Origin": "https://cnfinal2022.herokuapp.com",
                     "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
                     "Access-Control-Request-Headers": "Access-Control-Allow-Headers, Cookie, Content-Type, X-Requested-With, content-type, Origin, Accept, Access-Control-Request-Method, Access-Control-Request-Headers",
                     "Access-Control-Allow-Credentials": "true",
@@ -144,7 +145,7 @@ def threaded(c):
 
 def Main():
     host = ""
-    port = 5556
+    port = int(os.environ["PORT"]) or 5556
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.bind((host, port))
     print("socket binded to port", port)

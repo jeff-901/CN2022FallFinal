@@ -57,7 +57,7 @@ def return_video_response(request: HttpRequest):
         {
             "Content-Type": "text/html",
             "Connection": "close",
-            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Origin": "https://cnfinal2022.herokuapp.com",
             "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
             "Access-Control-Request-Headers": "Access-Control-Allow-Headers, Content-Type, X-Requested-With, content-type, Origin, Accept, Access-Control-Request-Method, Access-Control-Request-Headers",
             "Access-Control-Allow-Credentials": "true",

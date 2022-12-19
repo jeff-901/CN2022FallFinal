@@ -2,4 +2,4 @@ pymongo
 python-dotenv
 opencv-python
 Flask
-jwt
+pyjwt

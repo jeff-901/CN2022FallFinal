@@ -182,7 +182,7 @@ export default function Chatroom({ user, setUser }) {
           crossorigin="anonymous"
           autoplay
         >
-          <source src="http://localhost:5556/api/video" type="video/mp4" />
+          <source src="https://cnfinal2022.herokuapp.com/api/video" type="video/mp4" />
         </video>
       </div>
       {/* </div> */}

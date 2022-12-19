@@ -17,7 +17,7 @@ def handle_get(request: HttpRequest):
             {
                 "Content-Type": "application/pdf",
                 "Connection": "close",
-                "Access-Control-Allow-Origin": "http://localhost:3000",
+                "Access-Control-Allow-Origin": "https://cnfinal2022.herokuapp.com",
                 "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
                 "Access-Control-Request-Headers": "Access-Control-Allow-Headers, Content-Type, X-Requested-With, content-type, Origin, Accept, Access-Control-Request-Method, Access-Control-Request-Headers",
                 "Access-Control-Allow-Credentials": "true",
@@ -35,7 +35,7 @@ def handle_get(request: HttpRequest):
         "Accept-Ranges": "bytes",
         "Content-Length": contentLength,
         "Content-Type": file_meta["type"],
-        "Access-Control-Allow-Origin": "http://localhost:3000",
+        "Access-Control-Allow-Origin": "https://cnfinal2022.herokuapp.com",
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
         "Access-Control-Request-Headers": "Access-Control-Allow-Headers, Content-Type, X-Requested-With, content-type, Origin, Accept, Access-Control-Request-Method, Access-Control-Request-Headers",
     }
