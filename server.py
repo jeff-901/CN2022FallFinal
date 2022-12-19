@@ -6,7 +6,11 @@ import time
 
 from db import *
 import handle_session, handle_user, handle_friend, handle_message
-import handle_video, handle_file
+import handle_video, handle_file, handle_v
+
+index_html = None
+with open("index.html", "r") as f:
+    index_html = f.read()
 
 # thread function
 def threaded(c):
@@ -16,23 +20,43 @@ def threaded(c):
     request = parse_request(data)
     print(request)
 
-    # if request.path == "/":
-    #     if request.method == "GET":
-    #         c.send(
-    #             wrap_response(
-    #                 request.version,
-    #                 200,
-    #                 {
-    #                     "Content-Type": "text/html",
-    #                     "Connection": "close",
-    #                     "Access-Control-Allow-Origin": "http://localhost:3000",
-    #                     "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-    #                     "Access-Control-Request-Headers": "Access-Control-Allow-Headers, Content-Type, X-Requested-With, content-type, Origin, Accept, Access-Control-Request-Method, Access-Control-Request-Headers",
-    #                     "Access-Control-Allow-Credentials": "true",
-    #                 },
-    #                 "<html><h1>Hello</h1></html>",
-    #             )
-    #         )
+    if request.path == "/":
+        if request.method == "GET":
+            c.send(
+                wrap_response(
+                    request.version,
+                    200,
+                    {
+                        "Content-Type": "text/html",
+                        "Connection": "close",
+                        "Access-Control-Allow-Origin": "http://localhost:5556",
+                        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+                        "Access-Control-Request-Headers": "Access-Control-Allow-Headers, Content-Type, X-Requested-With, content-type, Origin, Accept, Access-Control-Request-Method, Access-Control-Request-Headers",
+                        "Access-Control-Allow-Credentials": "true",
+                    },
+                    index_html,
+                )
+            )
+    elif request.path[: len("/assets")] == "/assets":
+        data = ""
+        with open(request.path[1:], "r") as f:
+            data = f.read()
+        if request.method == "GET":
+            c.send(
+                wrap_response(
+                    request.version,
+                    200,
+                    {
+                        "Content-Type": "text/html",
+                        "Connection": "close",
+                        "Access-Control-Allow-Origin": "http://localhost:5556",
+                        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+                        "Access-Control-Request-Headers": "Access-Control-Allow-Headers, Content-Type, X-Requested-With, content-type, Origin, Accept, Access-Control-Request-Method, Access-Control-Request-Headers",
+                        "Access-Control-Allow-Credentials": "true",
+                    },
+                    data,
+                )
+            )
     #     else:
     #         c.send(
     #             wrap_response(
@@ -48,7 +72,7 @@ def threaded(c):
     #                 },
     #             )
     #         )
-    if request.path == "/api/session":
+    elif request.path == "/api/session":
         if request.method == "POST":
             c.send(handle_session.handle_post(request))
         elif request.method == "GET":
@@ -90,6 +114,10 @@ def threaded(c):
     elif request.path == "/api/videos":
         print("test")
         c.send(handle_video.return_video_response(request))
+        # c.send(handle_message.handle_post(request))
+    elif request.path == "/api/video":
+        print("test")
+        c.send(handle_v.handle_get(request))
         # c.send(handle_message.handle_post(request))
     else:
         c.send(

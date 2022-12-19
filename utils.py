@@ -1,6 +1,8 @@
 from http.client import responses
 
-
+# print(responses[206])
+# my_responses = responses.copy()
+# my_responses[206] = " Partial Content"
 class HttpRequest:
     def __init__(self, version, method, path, headers, data):
         self.version = version

@@ -26,6 +26,8 @@ message_collection = dbname["messages"]
 file_collection = dbname["file"]
 file_chunk_collection = dbname["chunk"]
 CHUNKSIZE = 16000000
+cache = {}
+# file_chunk_collection.delete_many({})
 # item_1 = {
 #     "username": "john",
 #     "password": "1234",
@@ -78,10 +80,10 @@ def get_messages(user1, user2):
     return list(message_collection.find(myquery))
 
 
-def create_file(file, data):
+def create_file(file, data, file_type, size):
     print(f"create file with {file}")
     data += b"\0"
-    insert_file = {"name": file, "chunks": []}
+    insert_file = {"name": file, "chunks": [], "type": file_type, "size": size}
     chunk_num = math.ceil(len(data) / CHUNKSIZE)
     chunk_id = []
     for i in range(chunk_num):
@@ -94,17 +96,57 @@ def create_file(file, data):
     return str(file_meta.inserted_id)
 
 
-def get_file(file_id):
-    print(f"get file: {file_id}")
+def get_file_meta(file_id):
+    print(f"get file meta: {file_id}")
     myquery = {"_id": ObjectId(file_id)}
     files = list(file_collection.find(myquery))
     if len(files) == 0:
         return None
     file = files[0]
+    return file
+
+
+def get_file(file_id, start=-1, end=-1):
+    print(f"get file: {file_id}")
+    if file_id not in cache:
+        myquery = {"_id": ObjectId(file_id)}
+        files = list(file_collection.find(myquery))
+        if len(files) == 0:
+            return None
+        file = files[0]
+        cache[file_id] = {
+            "chunks": file["chunks"],
+            "size": file["size"],
+            "type": file["type"],
+        }
     data = b""
-    for chunk in file["chunks"]:
-        chunk_data = file_chunk_collection.find_one({"_id": ObjectId(chunk)})
-        # print(type(chunk_data["data"]))
-        data += chunk_data["data"]
+    if start == -1:
+        for chunk in cache[file_id]["chunks"]:
+            if chunk in cache[file_id]:
+                data += cache[file_id][chunk]
+            else:
+                chunk_data = file_chunk_collection.find_one({"_id": ObjectId(chunk)})
+                # print(type(chunk_data["data"]))
+                cache[file_id][chunk] = chunk_data["data"]
+                data += chunk_data["data"]
+        data = data[:-1]
+    else:
+        chunk_sidx = start // CHUNKSIZE
+        chunk_eidx = end // CHUNKSIZE
+        chunk_sid = cache[file_id]["chunks"][chunk_sidx]
+        chunk_eid = cache[file_id]["chunks"][chunk_eidx]
+        if chunk_sid not in cache[file_id]:
+            chunk_data = file_chunk_collection.find_one({"_id": ObjectId(chunk_sid)})
+            cache[file_id][chunk_sid] = chunk_data["data"]
+        if chunk_eidx not in cache[file_id]:
+            chunk_data = file_chunk_collection.find_one({"_id": ObjectId(chunk_eid)})
+            cache[file_id][chunk_eid] = chunk_data["data"]
+        data = cache[file_id][chunk_sid]
+        if chunk_sid != chunk_eid:
+            data += cache[file_id][chunk_eid]
+
+        data = data[start % CHUNKSIZE : start % CHUNKSIZE + (end - start)]
+        if end == cache[file_id]["size"] - 1:
+            data = data[:-1]
     # print(data)
-    return data[:-1]
+    return cache[file_id]["type"], cache[file_id]["size"], data

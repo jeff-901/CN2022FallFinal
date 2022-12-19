@@ -72,9 +72,8 @@ export const MessageAPI = {
 export const FileAPI = {
   createFile: (file, data) =>
     userRequest({
-      Headers: { type: file["type"] },
       method: "post",
-      url: `/api/files/?file=${file["name"]}`,
+      url: `/api/files/?file=${file["name"]}&type=${file["type"]}`,
       data: data,
     }),
   getFile: (file_id) =>

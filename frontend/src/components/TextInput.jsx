@@ -80,6 +80,32 @@ export default function TextInput({
     let res = await VideoAPI.createVideo(user);
   };
 
+  const handleAudio = async () => {
+    navigator.mediaDevices
+      .getUserMedia({ audio: true })
+      .then((stream) => {
+        // const audioContext = new AudioContext;
+        // const audioInput = audioContext.createMediaStreamSource(stream);
+
+        const rec = new MediaRecorder(stream);
+        // 這個聲音串流一開時，就開始進行錄製。
+        rec.start();
+        console.log("start record");
+        setTimeout(function () {
+          // 然後在 10 秒後結束錄製，並產生個語音控制項與下載連結。
+          rec.stop();
+          console.log("finish record");
+          console.log(rec.state);
+          // createAudioController(rec);
+          // createDownloadLink(rec);
+        }, 3000);
+      })
+      .catch((err) => {
+        console.log("nonono ~~~ !!");
+        console.log(err);
+      });
+  };
+
   return (
     <>
       <form className={classes.wrapForm} noValidate autoComplete="off">
@@ -111,7 +137,7 @@ export default function TextInput({
           color="primary"
           size="small"
           className={classes.button}
-          onClick={handleStream}
+          onClick={handleAudio}
         >
           <VideoCallRoundedIcon />
         </Button>

@@ -121,7 +121,7 @@ export default function Chatroom({ user, setUser }) {
       {/* <div className={classes.container}> */}
       {/* <Paper className={classes.paper} zdepth={2}> */}
       {/*  */}
-      <div className="Body" id="Body">
+      <div className={classes.body} id="Body">
         {friend === "" ? (
           <h1>Choose a friend</h1>
         ) : (
@@ -174,6 +174,16 @@ export default function Chatroom({ user, setUser }) {
             )}
           </div>
         )}
+        <video
+          id="videoPlayer"
+          width="650"
+          controls
+          muted="muted"
+          crossorigin="anonymous"
+          autoplay
+        >
+          <source src="http://localhost:5556/api/video" type="video/mp4" />
+        </video>
       </div>
       {/* </div> */}
     </div>
