@@ -163,15 +163,6 @@ export default function Chatroom({ user, setUser }) {
                 setStream={setStream}
               />
             </Paper>
-
-            {!stream ? (
-              <h1>test_function</h1>
-            ) : (
-              <>
-                <h2>test_</h2>
-                <img src="{{ url_for('aaa') }}" width="100%" />
-              </>
-            )}
           </div>
         )}
         <video

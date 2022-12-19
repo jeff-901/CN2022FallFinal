@@ -11,6 +11,15 @@ import VideoCallRoundedIcon from "@mui/icons-material/VideoCallRounded";
 import KeyboardVoiceIcon from "@mui/icons-material/KeyboardVoice";
 import StopIcon from "@mui/icons-material/Stop";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
+
+import { useReactMediaRecorder } from "react-media-recorder";
+import VideoRecorder from "react-video-recorder";
+import {
+  RecordWebcam,
+  useRecordWebcam,
+  CAMERA_STATUS
+} from "react-record-webcam";
+
 const theme = createTheme();
 
 const useStyles = makeStyles({
@@ -102,56 +111,111 @@ export default function TextInput({
     setFile("");
   };
 
+  const handleVideo = async(blob) =>{
+    const buf = await blob.arrayBuffer();
+    // console.log(blob.getArrayBuffer())
+    let res_file = await FileAPI.createFile(
+      { name: "tmp.mp4", type: "video" },
+      buf,
+      friend
+    );
+    console.log(res_file);
+    let res_msg = await MessageAPI.createMessage(friend, {
+      type: "video",
+      name: "tmp.mp4",
+      id: res_file.id,
+    });
+    setMessages([...messages, res_msg]);
+    setFile("");
+  };
+
+  const OPTIONS = {
+    filename: "test-filename",
+    fileType: "mp4",
+    width: 1920,
+    height: 1080
+  };
+  const RecordView = () => {
+    const {
+      status,
+      startRecording,
+      stopRecording,
+      mediaBlobUrl
+    } = useReactMediaRecorder({
+      video: true,
+      facingMode: { exact: "environment" }
+    });
+  
+    return (
+      <div>
+        <p>{status}</p>
+        <button onClick={startRecording}>Start Recording</button>
+        <button onClick={stopRecording}>Stop Recording</button>
+        <video src={mediaBlobUrl} controls autoPlay loop />
+      </div>
+    );
+  };
+  const recordWebcam = useRecordWebcam(OPTIONS);
+  const getRecordingFileHooks = async () => {
+    const blob = await recordWebcam.getRecording();
+    console.log({ blob });
+  };
+
+  const getRecordingFileRenderProp = async (blob) => {
+    console.log({ blob });
+  };
   return (
     <>
       <form className={classes.wrapForm} noValidate autoComplete="off">
+        {!stream?
+        <>
         <input
-          accept="*"
-          type="file"
-          id="upload_file"
-          name="myfile"
-          hidden
-          onChange={(e) => {
-            setFile(e.target.files[0]);
-            console.log(e.target.files);
-          }}
-        />
-        <Button
-          variant="outlined"
-          color="primary"
-          size="medium"
-          className={classes.button}
-          // onClick={sendMsg}
-        >
-          <label for="upload_file">
-            <FileUploadRoundedIcon />
-          </label>
-        </Button>
+        accept="*"
+        type="file"
+        id="upload_file"
+        name="myfile"
+        hidden
+        onChange={(e) => {
+          setFile(e.target.files[0]);
+          console.log(e.target.files);
+        }}
+      />
+      <Button
+        variant="outlined"
+        color="primary"
+        size="medium"
+        className={classes.button}
+        // onClick={sendMsg}
+      >
+        <label for="upload_file">
+          <FileUploadRoundedIcon />
+        </label>
+      </Button>
 
-        <Button
-          variant="outlined"
-          color="primary"
-          size="small"
-          className={classes.button}
-          // onClick={handleAudio}
-        >
-          <VideoCallRoundedIcon />
-        </Button>
+      <Button
+        variant="outlined"
+        color="primary"
+        size="small"
+        className={classes.button}
+         onClick={handleStream}
+      >
+        <VideoCallRoundedIcon />
+      </Button>
 
-        {/* <Button
-          variant="outlined"
-          color="primary"
-          size="small"
-          className={classes.button}
-          onClick={handleAudio}
-        >
-          {
-          recording?<StopIcon/>:<KeyboardVoiceIcon />
-        }
-          
-        </Button> */}
-        <AudioRecorder onRecordingComplete={handleAudio} />
-        <TextField
+      {/* <Button
+        variant="outlined"
+        color="primary"
+        size="small"
+        className={classes.button}
+        onClick={handleAudio}
+      >
+        {
+        recording?<StopIcon/>:<KeyboardVoiceIcon />
+      }
+        
+      </Button> */}
+      <AudioRecorder onRecordingComplete={handleAudio} />
+      <TextField
           id="standard-text"
           label="Type a message"
           className={classes.wrapText}
@@ -170,6 +234,15 @@ export default function TextInput({
         >
           <SendIcon />
         </Button>
+      </>:<VideoRecorder
+                onRecordingComplete={(videoBlob) => {
+                    // Do something with the video...
+                    console.log('videoBlob', videoBlob)
+                }}
+            />}
+        
+        
+        
       </form>
     </>
   );

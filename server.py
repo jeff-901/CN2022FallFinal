@@ -118,10 +118,6 @@ def threaded(c):
             c.send(handle_file.handle_get(request))
         else:
             c.send(wrap_response(request.version, 501, {"Connection": "close"},))
-    # elif request.path == "/api/videos":
-    #     print("test")
-    #     c.send(handle_video.return_video_response(request))
-    #     # c.send(handle_message.handle_post(request))
     elif request.path == "/api/video":
         if request.method == "GET":
             c.send(handle_v.handle_get(request))
@@ -153,6 +149,7 @@ def threaded(c):
 def Main():
     host = ""
     port = int(os.environ["PORT"]) or 5556
+   # port = 5556
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.bind((host, port))
     print("socket binded to port", port)
