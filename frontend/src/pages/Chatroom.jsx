@@ -20,9 +20,9 @@ import { MessageAPI } from "../api";
 // import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 const useStyles = makeStyles({
   paper: {
-    width: "80%",
-    height: "90vh",
-    maxWidth: "500px",
+    width: "95%",
+    height: "85vh",
+    maxWidth: "1200px",
     maxHeight: "700px",
     display: "flex",
     alignItems: "center",
@@ -30,8 +30,8 @@ const useStyles = makeStyles({
     position: "relative",
   },
   paper2: {
-    width: "80vw",
-    maxWidth: "500px",
+    width: "70vw",
+    maxWidth: "1200px",
     display: "flex",
     alignItems: "center",
     flexDirection: "column",
@@ -182,7 +182,10 @@ export default function Chatroom({ user, setUser }) {
           crossorigin="anonymous"
           autoplay
         >
-          <source src="https://cnfinal2022.herokuapp.com/api/video" type="video/mp4" />
+          <source
+            src="https://cnfinal2022.herokuapp.com/api/video"
+            type="video/mp4"
+          />
         </video>
       </div>
       {/* </div> */}

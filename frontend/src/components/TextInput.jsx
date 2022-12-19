@@ -8,6 +8,9 @@ import { createTheme } from "@mui/material";
 import { MessageAPI, VideoAPI, FileAPI } from "../api";
 import FileUploadRoundedIcon from "@mui/icons-material/FileUploadRounded";
 import VideoCallRoundedIcon from "@mui/icons-material/VideoCallRounded";
+import KeyboardVoiceIcon from "@mui/icons-material/KeyboardVoice";
+import StopIcon from "@mui/icons-material/Stop";
+import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
 const theme = createTheme();
 
 const useStyles = makeStyles({
@@ -36,6 +39,7 @@ export default function TextInput({
   const classes = useStyles();
   const [text, setText] = useState("");
   const [file, setFile] = useState("");
+  // const [recording, setRecording] = useState(false);
 
   function getArrayBuffer(file) {
     return new Promise((resolve, reject) => {
@@ -80,30 +84,22 @@ export default function TextInput({
     let res = await VideoAPI.createVideo(user);
   };
 
-  const handleAudio = async () => {
-    navigator.mediaDevices
-      .getUserMedia({ audio: true })
-      .then((stream) => {
-        // const audioContext = new AudioContext;
-        // const audioInput = audioContext.createMediaStreamSource(stream);
-
-        const rec = new MediaRecorder(stream);
-        // 這個聲音串流一開時，就開始進行錄製。
-        rec.start();
-        console.log("start record");
-        setTimeout(function () {
-          // 然後在 10 秒後結束錄製，並產生個語音控制項與下載連結。
-          rec.stop();
-          console.log("finish record");
-          console.log(rec.state);
-          // createAudioController(rec);
-          // createDownloadLink(rec);
-        }, 3000);
-      })
-      .catch((err) => {
-        console.log("nonono ~~~ !!");
-        console.log(err);
-      });
+  const handleAudio = async (blob) => {
+    const buf = await blob.arrayBuffer();
+    // console.log(blob.getArrayBuffer())
+    let res_file = await FileAPI.createFile(
+      { name: "tmp.mp3", type: "audio/mpeg" },
+      buf,
+      friend
+    );
+    console.log(res_file);
+    let res_msg = await MessageAPI.createMessage(friend, {
+      type: "audio",
+      name: "tmp.mp3",
+      id: res_file.id,
+    });
+    setMessages([...messages, res_msg]);
+    setFile("");
   };
 
   return (
@@ -137,10 +133,24 @@ export default function TextInput({
           color="primary"
           size="small"
           className={classes.button}
-          onClick={handleAudio}
+          // onClick={handleAudio}
         >
           <VideoCallRoundedIcon />
         </Button>
+
+        {/* <Button
+          variant="outlined"
+          color="primary"
+          size="small"
+          className={classes.button}
+          onClick={handleAudio}
+        >
+          {
+          recording?<StopIcon/>:<KeyboardVoiceIcon />
+        }
+          
+        </Button> */}
+        <AudioRecorder onRecordingComplete={handleAudio} />
         <TextField
           id="standard-text"
           label="Type a message"

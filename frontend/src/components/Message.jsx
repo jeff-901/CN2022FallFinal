@@ -58,7 +58,8 @@ const useStyles = makeStyles({
     marginBottom: "10px",
     padding: "10px",
     backgroundColor: "#f8e896",
-    width: "60%",
+    width: "45%",
+    maxWidth: "500px",
     //height: "50px",
     textAlign: "left",
     font: "400 .9em 'Open Sans', sans-serif",
@@ -146,6 +147,15 @@ export const MessageLeft = (props) => {
         <div className={classes.messageBlue}>
           {message.type === "msg" ? (
             <p className={classes.messageContent}>{message.data}</p>
+          ) : message.type === "audio" ? (
+            <audio
+              src={
+                import.meta.env.VITE_USER_BACKEND_URL +
+                "/api/audio?id=" +
+                message.id
+              }
+              controls={true}
+            />
           ) : (
             <p
               className={classes.messageContent}
@@ -175,6 +185,15 @@ export const MessageRight = (props) => {
       <div className={classes.messageOrange}>
         {message.type === "msg" ? (
           <p className={classes.messageContent}>{message.data}</p>
+        ) : message.type === "audio" ? (
+          <audio
+            src={
+              import.meta.env.VITE_USER_BACKEND_URL +
+              "/api/audio?id=" +
+              message.id
+            }
+            controls={true}
+          />
         ) : (
           <p
             onClick={() => {

@@ -6,8 +6,9 @@ import time
 
 from db import *
 import handle_session, handle_user, handle_friend, handle_message
-import handle_file, handle_v
+import handle_file, handle_v, handle_audio
 from dotenv import load_dotenv
+
 load_dotenv()
 index_html = None
 with open("frontend/dist/index.html", "r") as f:
@@ -122,9 +123,15 @@ def threaded(c):
     #     c.send(handle_video.return_video_response(request))
     #     # c.send(handle_message.handle_post(request))
     elif request.path == "/api/video":
-        print("test")
-        c.send(handle_v.handle_get(request))
-        # c.send(handle_message.handle_post(request))
+        if request.method == "GET":
+            c.send(handle_v.handle_get(request))
+        else:
+            c.send(wrap_response(request.version, 501, {"Connection": "close"},))
+    elif request.path[: len("/api/audio")] == "/api/audio":
+        if request.method == "GET":
+            c.send(handle_audio.handle_get(request))
+        else:
+            c.send(wrap_response(request.version, 501, {"Connection": "close"},))
     else:
         c.send(
             wrap_response(
