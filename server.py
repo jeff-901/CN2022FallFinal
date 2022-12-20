@@ -149,7 +149,7 @@ def threaded(c):
 def Main():
     host = ""
     #port = int(os.environ["PORT"]) or 5556
-    port = os.environ["MONGO_URL"] or 5556
+    port = os.environ["PORT"] or 5556
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.bind((host, port))
     print("socket binded to port", port)
