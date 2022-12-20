@@ -20,7 +20,6 @@ import {
   CAMERA_STATUS,
 } from "react-record-webcam";
 
-
 const theme = createTheme();
 
 const useStyles = makeStyles({
@@ -67,13 +66,9 @@ export default function TextInput({
     if (file !== "") {
       console.log(`${user.username} send to ${friend} ${file}`);
       const arrayBuffer = await getArrayBuffer(file);
-      let res_file = await FileAPI.createFile(
-        file,
-        arrayBuffer,
-        friend
-      ); 
+      let res_file = await FileAPI.createFile(file, arrayBuffer, friend);
       let res_msg;
-      if(file.type.includes("video")){
+      if (file.type.includes("video")) {
         res_msg = await MessageAPI.createMessage(friend, {
           type: "video",
           name: file["name"],
@@ -81,7 +76,7 @@ export default function TextInput({
         });
         setMessages([...messages, res_msg]);
         setFile("");
-      }else if(file.type.includes("audio")){
+      } else if (file.type.includes("audio")) {
         res_msg = await MessageAPI.createMessage(friend, {
           type: "audio",
           name: file["name"],
@@ -89,17 +84,16 @@ export default function TextInput({
         });
         setMessages([...messages, res_msg]);
         setFile("");
-      }
-      else{
+      } else {
         res_msg = await MessageAPI.createMessage(friend, {
-        type: "file",
-        name: file["name"],
-        id: res_file.id,
-      });
-      setMessages([...messages, res_msg]);
-      setFile("");
+          type: "file",
+          name: file["name"],
+          id: res_file.id,
+        });
+        setMessages([...messages, res_msg]);
+        setFile("");
+      }
     }
-  }
     if (text !== "") {
       console.log(`${user.username} send to ${friend} ${text}`);
       let res = await MessageAPI.createMessage(friend, {
@@ -153,8 +147,7 @@ export default function TextInput({
     setMessages([...messages, res_msg]);
     setFile("");
   };
-  
-  
+
   return (
     <>
       <form className={classes.wrapForm} noValidate autoComplete="off">
@@ -228,17 +221,10 @@ export default function TextInput({
           </>
         ) : (
           <>
-          <button
-        >
-          Open camera
-        </button>
-         
-          <Button
-                onClick={handleStream}
-              >
-                close
-              </Button>
-              </>
+            <button>Open camera</button>
+
+            <Button onClick={handleStream}>close</Button>
+          </>
         )}
       </form>
     </>

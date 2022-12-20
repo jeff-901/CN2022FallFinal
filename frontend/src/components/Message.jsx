@@ -10,10 +10,10 @@ import { FileAPI } from "../api";
 import fileDownload from "react-file-download";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
-import VideoPop from 'react-video-pop';
-import StickyVideo from 'react-sticky-video';
-import 'react-sticky-video/dist/index.css';
-import ReactPlayer from 'react-player';
+import VideoPop from "react-video-pop";
+import StickyVideo from "react-sticky-video";
+import "react-sticky-video/dist/index.css";
+import ReactPlayer from "react-player";
 const theme = createTheme();
 const useStyles = makeStyles({
   messageRow: {
@@ -29,7 +29,7 @@ const useStyles = makeStyles({
     marginBottom: "10px",
     padding: "10px",
     backgroundColor: "#A8DDFD",
-    width: "60%",
+    width: "100%",
     //height: "50px",
     textAlign: "left",
     font: "400 .9em 'Open Sans', sans-serif",
@@ -148,7 +148,7 @@ export const MessageLeft = (props) => {
   const photoURL = props.photoURL ? props.photoURL : "dummy.js";
   const displayName = props.displayName ? props.displayName : "Anonymous";
   const classes = useStyles();
-  
+
   //const watch = props.watch;
   //const handleWatch = ()=>{
   //  props.setWatch(!watch);
@@ -178,15 +178,14 @@ export const MessageLeft = (props) => {
           ) : message.type === "video" ? (
             watch ? (
               <>
-              
                 <video
                   src={
                     import.meta.env.VITE_USER_BACKEND_URL +
                     "/api/video?id=" +
                     message.id
                   }
-                  width = '320'
-                  height='240'
+                  width="320"
+                  height="240"
                   controls={true}
                 />
                 <Button
@@ -197,14 +196,13 @@ export const MessageLeft = (props) => {
                 >
                   close
                 </Button>
-
               </>
             ) : (
               <p
                 className={classes.messageContent}
                 onClick={() => {
                   // downloadFile(message.name, message.id);
-                 setWatch(true);
+                  setWatch(true);
                   //handleWatch
                 }}
               >
@@ -260,8 +258,8 @@ export const MessageRight = (props) => {
                   "/api/video?id=" +
                   message.id
                 }
-                width = '320'
-                height='240'
+                width="320"
+                height="240"
                 controls={true}
               />
               <Button
@@ -271,7 +269,7 @@ export const MessageRight = (props) => {
               >
                 close
               </Button>
-              </>
+            </>
           ) : (
             <p
               className={classes.messageContent}

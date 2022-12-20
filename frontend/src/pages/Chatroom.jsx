@@ -130,33 +130,33 @@ export default function Chatroom({ user, setUser }) {
         ) : (
           <div>
             <Paper className={classes.paper} zdepth={2}>
-             <Paper id="style-1" className={classes.messagesBody}>
-              <Stack spacing={2}>
-                {messages.map((msg) => {
-                  if (msg.senders.split(",")[0] !== user.username) {
-                    return (
-                      <MessageLeft
-                        message={msg.msg}
-                        timestamp={msg.timestamp * 1000}
-                        // photoURL="https://lh3.googleusercontent.com/a-/AOh14Gi4vkKYlfrbJ0QLJTg_DLjcYyyK7fYoWRpz2r4s=s96-c"
-                        photoURL=""
-                        displayName={friend}
-                        avatarDisp={true}
-                      />
-                    );
-                  } else {
-                    return (
-                      <MessageRight
-                        message={msg.msg}
-                        timestamp={msg.timestamp * 1000}
-                        // photoURL="https://lh3.googleusercontent.com/a-/AOh14Gi4vkKYlfrbJ0QLJTg_DLjcYyyK7fYoWRpz2r4s=s96-c"
-                        photoURL=""
-                        displayName={user.username}
-                        avatarDisp={true}
-                      />
-                    );
-                  }
-                })}
+              <Paper id="style-1" className={classes.messagesBody}>
+                <Stack spacing={2}>
+                  {messages.map((msg) => {
+                    if (msg.senders.split(",")[0] !== user.username) {
+                      return (
+                        <MessageLeft
+                          message={msg.msg}
+                          timestamp={msg.timestamp * 1000}
+                          // photoURL="https://lh3.googleusercontent.com/a-/AOh14Gi4vkKYlfrbJ0QLJTg_DLjcYyyK7fYoWRpz2r4s=s96-c"
+                          photoURL=""
+                          displayName={friend}
+                          avatarDisp={true}
+                        />
+                      );
+                    } else {
+                      return (
+                        <MessageRight
+                          message={msg.msg}
+                          timestamp={msg.timestamp * 1000}
+                          // photoURL="https://lh3.googleusercontent.com/a-/AOh14Gi4vkKYlfrbJ0QLJTg_DLjcYyyK7fYoWRpz2r4s=s96-c"
+                          photoURL=""
+                          displayName={user.username}
+                          avatarDisp={true}
+                        />
+                      );
+                    }
+                  })}
                 </Stack>
               </Paper>
               <TextInput
@@ -170,8 +170,7 @@ export default function Chatroom({ user, setUser }) {
             </Paper>
           </div>
         )}
-        {
-        /*
+        {/*
         <video
           id="videoPlayer"
           width="650"

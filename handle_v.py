@@ -24,7 +24,7 @@ def handle_get(request: HttpRequest):
                 "Access-Control-Allow-Credentials": "true",
             },
         )
-    #video_file_id = "663a194bd9c18e6b873cbde7f"
+    # video_file_id = "663a194bd9c18e6b873cbde7f"
     print(video_file_id)
     file_meta = get_file_meta(video_file_id)
     videoSize = file_meta["size"]
