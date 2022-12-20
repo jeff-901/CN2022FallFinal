@@ -16,7 +16,7 @@ with open("frontend/dist/index.html", "r") as f:
 
 # thread function
 def threaded(c):
-    data = c.recv(4096)
+    data = c.recv(1000000)
     if not data:
         print("Bye")
     request = parse_request(data)
