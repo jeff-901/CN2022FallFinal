@@ -17,7 +17,7 @@ import VideoRecorder from "react-video-recorder";
 import {
   RecordWebcam,
   useRecordWebcam,
-  CAMERA_STATUS
+  CAMERA_STATUS,
 } from "react-record-webcam";
 
 const theme = createTheme();
@@ -111,7 +111,7 @@ export default function TextInput({
     setFile("");
   };
 
-  const handleVideo = async(blob) =>{
+  const handleVideo = async (blob) => {
     const buf = await blob.arrayBuffer();
     // console.log(blob.getArrayBuffer())
     let res_file = await FileAPI.createFile(
@@ -133,19 +133,15 @@ export default function TextInput({
     filename: "test-filename",
     fileType: "mp4",
     width: 1920,
-    height: 1080
+    height: 1080,
   };
   const RecordView = () => {
-    const {
-      status,
-      startRecording,
-      stopRecording,
-      mediaBlobUrl
-    } = useReactMediaRecorder({
-      video: true,
-      facingMode: { exact: "environment" }
-    });
-  
+    const { status, startRecording, stopRecording, mediaBlobUrl } =
+      useReactMediaRecorder({
+        video: true,
+        facingMode: { exact: "environment" },
+      });
+
     return (
       <div>
         <p>{status}</p>
@@ -167,42 +163,42 @@ export default function TextInput({
   return (
     <>
       <form className={classes.wrapForm} noValidate autoComplete="off">
-        {!stream?
-        <>
-        <input
-        accept="*"
-        type="file"
-        id="upload_file"
-        name="myfile"
-        hidden
-        onChange={(e) => {
-          setFile(e.target.files[0]);
-          console.log(e.target.files);
-        }}
-      />
-      <Button
-        variant="outlined"
-        color="primary"
-        size="medium"
-        className={classes.button}
-        // onClick={sendMsg}
-      >
-        <label for="upload_file">
-          <FileUploadRoundedIcon />
-        </label>
-      </Button>
+        {!stream ? (
+          <>
+            <input
+              accept="*"
+              type="file"
+              id="upload_file"
+              name="myfile"
+              hidden
+              onChange={(e) => {
+                setFile(e.target.files[0]);
+                console.log(e.target.files);
+              }}
+            />
+            <Button
+              variant="outlined"
+              color="primary"
+              size="medium"
+              className={classes.button}
+              // onClick={sendMsg}
+            >
+              <label for="upload_file">
+                <FileUploadRoundedIcon />
+              </label>
+            </Button>
 
-      <Button
-        variant="outlined"
-        color="primary"
-        size="small"
-        className={classes.button}
-         onClick={handleStream}
-      >
-        <VideoCallRoundedIcon />
-      </Button>
+            <Button
+              variant="outlined"
+              color="primary"
+              size="small"
+              className={classes.button}
+              onClick={handleStream}
+            >
+              <VideoCallRoundedIcon />
+            </Button>
 
-      {/* <Button
+            {/* <Button
         variant="outlined"
         color="primary"
         size="small"
@@ -214,35 +210,35 @@ export default function TextInput({
       }
         
       </Button> */}
-      <AudioRecorder onRecordingComplete={handleAudio} />
-      <TextField
-          id="standard-text"
-          label="Type a message"
-          className={classes.wrapText}
-          //margin="normal"
-          value={text}
-          onChange={(event) => {
-            setText(event.target.value);
-          }}
-        />
+            <AudioRecorder onRecordingComplete={handleAudio} />
+            <TextField
+              id="standard-text"
+              label="Type a message"
+              className={classes.wrapText}
+              //margin="normal"
+              value={text}
+              onChange={(event) => {
+                setText(event.target.value);
+              }}
+            />
 
-        <Button
-          variant="contained"
-          color="primary"
-          className={classes.button}
-          onClick={sendMsg}
-        >
-          <SendIcon />
-        </Button>
-      </>:<VideoRecorder
-                onRecordingComplete={(videoBlob) => {
-                    // Do something with the video...
-                    console.log('videoBlob', videoBlob)
-                }}
-            />}
-        
-        
-        
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              onClick={sendMsg}
+            >
+              <SendIcon />
+            </Button>
+          </>
+        ) : (
+          <VideoRecorder
+            onRecordingComplete={(videoBlob) => {
+              // Do something with the video...
+              console.log("videoBlob", videoBlob);
+            }}
+          />
+        )}
       </form>
     </>
   );

@@ -1,4 +1,5 @@
 import React from "react";
+import { useState } from "react";
 import { makeStyles } from "@mui/styles";
 import { createStyles } from "@mui/material/styles";
 import { createTheme } from "@mui/material";
@@ -7,6 +8,8 @@ import { deepOrange } from "@mui/material/colors";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { FileAPI } from "../api";
 import fileDownload from "react-file-download";
+import Paper from "@mui/material/Paper";
+import Button from "@mui/material/Button";
 
 const theme = createTheme();
 const useStyles = makeStyles({
@@ -117,6 +120,13 @@ const useStyles = makeStyles({
   displayName: {
     marginLeft: "20px",
   },
+  videoPaper: {
+    width: "630px",
+    height: "420px",
+    position: "absolute",
+    top: "80px",
+    left: "10%",
+  },
 });
 
 const downloadFile = async (filename, file_id) => {
@@ -135,6 +145,7 @@ export const MessageLeft = (props) => {
   const photoURL = props.photoURL ? props.photoURL : "dummy.js";
   const displayName = props.displayName ? props.displayName : "Anonymous";
   const classes = useStyles();
+  const [watch, setWatch] = useState(false);
   return (
     <div className={classes.messageRow}>
       <Avatar
@@ -156,6 +167,37 @@ export const MessageLeft = (props) => {
               }
               controls={true}
             />
+          ) : message.type === "video" ? (
+            watch ? (
+              <Paper className={classes.videoPaper}>
+                <video
+                  src={
+                    import.meta.env.VITE_USER_BACKEND_URL +
+                    "/api/video?id=" +
+                    message.id
+                  }
+                  controls={true}
+                />
+                <Button
+                  onClick={() => {
+                    setWatch(false);
+                  }}
+                >
+                  close
+                </Button>
+              </Paper>
+            ) : (
+              <p
+                className={classes.messageContent}
+                onClick={() => {
+                  // downloadFile(message.name, message.id);
+                  setWatch(true);
+                }}
+              >
+                <FileDownloadIcon />
+                {message.name}
+              </p>
+            )
           ) : (
             <p
               className={classes.messageContent}
@@ -180,6 +222,7 @@ export const MessageRight = (props) => {
   const classes = useStyles();
   const message = props.message;
   const timestamp = props.timestamp ? props.timestamp : "";
+  const [watch, setWatch] = useState(false);
   return (
     <div className={classes.messageRowRight}>
       <div className={classes.messageOrange}>
@@ -194,6 +237,37 @@ export const MessageRight = (props) => {
             }
             controls={true}
           />
+        ) : message.type === "video" ? (
+          watch ? (
+            <Paper className={classes.videoPaper}>
+              <video
+                src={
+                  import.meta.env.VITE_USER_BACKEND_URL +
+                  "/api/video?id=" +
+                  message.id
+                }
+                controls={true}
+              />
+              <Button
+                onClick={() => {
+                  setWatch(false);
+                }}
+              >
+                close
+              </Button>
+            </Paper>
+          ) : (
+            <p
+              className={classes.messageContent}
+              onClick={() => {
+                // downloadFile(message.name, message.id);
+                setWatch(true);
+              }}
+            >
+              <FileDownloadIcon />
+              {message.name}
+            </p>
+          )
         ) : (
           <p
             onClick={() => {

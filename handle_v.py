@@ -9,6 +9,7 @@ load_dotenv()
 
 
 def handle_get(request: HttpRequest):
+    video_file_id = request.path[len("/api/video?id=") :]
     range_size = request.headers.get("Range")
     if range_size is None:
         return wrap_response(
@@ -23,7 +24,8 @@ def handle_get(request: HttpRequest):
                 "Access-Control-Allow-Credentials": "true",
             },
         )
-    video_file_id = "639fff925fb571ca5fcfb896"
+    # video_file_id = "639fff925fb571ca5fcfb896"
+    print(video_file_id)
     file_meta = get_file_meta(video_file_id)
     videoSize = file_meta["size"]
     CHUNK_SIZE = 10 ** 6

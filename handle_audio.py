@@ -25,7 +25,7 @@ def handle_get(request: HttpRequest):
                 "Access-Control-Allow-Credentials": "true",
             },
         )
-    print(audio_file_id)
+    # print(audio_file_id)
     file_meta = get_file_meta(audio_file_id)
     audio_size = file_meta["size"]
     CHUNK_SIZE = 10 ** 6
