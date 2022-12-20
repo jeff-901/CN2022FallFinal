@@ -13,7 +13,6 @@ import Container from "@mui/material/Container";
 import CircularProgress from "@mui/material/CircularProgress";
 // components
 import NavigationBar from "./components/NavigationBar";
-import SideBar from "./components/Sidebar";
 // pages
 import Chatroom from "./pages/Chatroom";
 import Login from "./pages/Login";
@@ -111,23 +110,8 @@ function App() {
                   <Login setUser={setUser} setIsLogin={setIsLogin} />
                 )}
               </Route>
-              {/* <Route path="/reservation">
-                  {isLogin ? (
-                    <ReservationSearch user={user} />
-                  ) : (
-                    <Redirect to="/" />
-                  )}
-                </Route> */}
-              {/* <Route path="/status">
-                  {isLogin ? (
-                    <ReservationStatus user={user} />
-                  ) : (
-                    <Redirect to="/" />
-                  )}
-                </Route> */}
             </Switch>
           )}
-          {/* </Container> */}
         </Box>
       </Box>
     </ThemeProvider>

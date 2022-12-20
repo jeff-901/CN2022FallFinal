@@ -8,8 +8,6 @@ Add `.env` file with following variables
 
 ```bash
 VITE_USER_BACKEND_URL=<user backend url>
-VITE_RESERVATION_BACKEND_URL=<reservation backend url>
-VITE_HOSPITAL_BACKEND_URL=<hospital backend url>
 ```
 
 ## Development
