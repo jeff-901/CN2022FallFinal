@@ -20,6 +20,7 @@ import {
   CAMERA_STATUS,
 } from "react-record-webcam";
 
+
 const theme = createTheme();
 
 const useStyles = makeStyles({
@@ -90,7 +91,7 @@ export default function TextInput({
   //const [stream, setStream] = useState(false);
   const handleStream = async () => {
     setStream(!stream);
-    let res = await VideoAPI.createVideo(user);
+    //let res = await VideoAPI.createVideo(user);
   };
 
   const handleAudio = async (blob) => {
@@ -128,38 +129,8 @@ export default function TextInput({
     setMessages([...messages, res_msg]);
     setFile("");
   };
-
-  const OPTIONS = {
-    filename: "test-filename",
-    fileType: "mp4",
-    width: 1920,
-    height: 1080,
-  };
-  const RecordView = () => {
-    const { status, startRecording, stopRecording, mediaBlobUrl } =
-      useReactMediaRecorder({
-        video: true,
-        facingMode: { exact: "environment" },
-      });
-
-    return (
-      <div>
-        <p>{status}</p>
-        <button onClick={startRecording}>Start Recording</button>
-        <button onClick={stopRecording}>Stop Recording</button>
-        <video src={mediaBlobUrl} controls autoPlay loop />
-      </div>
-    );
-  };
-  const recordWebcam = useRecordWebcam(OPTIONS);
-  const getRecordingFileHooks = async () => {
-    const blob = await recordWebcam.getRecording();
-    console.log({ blob });
-  };
-
-  const getRecordingFileRenderProp = async (blob) => {
-    console.log({ blob });
-  };
+  
+  
   return (
     <>
       <form className={classes.wrapForm} noValidate autoComplete="off">
@@ -232,12 +203,18 @@ export default function TextInput({
             </Button>
           </>
         ) : (
-          <VideoRecorder
-            onRecordingComplete={(videoBlob) => {
-              // Do something with the video...
-              console.log("videoBlob", videoBlob);
-            }}
-          />
+          <>
+          <button
+        >
+          Open camera
+        </button>
+         
+          <Button
+                onClick={handleStream}
+              >
+                close
+              </Button>
+              </>
         )}
       </form>
     </>

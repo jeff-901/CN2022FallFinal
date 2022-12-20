@@ -17,6 +17,8 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import { useEffect } from "react";
 import { MessageAPI } from "../api";
+import VideoRecorder from "react-video-recorder";
+import Stack from "@mui/material/Stack";
 // import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 const useStyles = makeStyles({
   paper: {
@@ -83,6 +85,7 @@ export default function Chatroom({ user, setUser }) {
   const [friend, setFriend] = useState("");
   const [messages, setMessages] = useState([]);
   const [stream, setStream] = useState(false);
+  //const [watch, setWatch] = useState(false);
   useEffect(() => {
     const fetchFriends = async () => {
       console.log(`friend: ${friend}`);
@@ -127,7 +130,8 @@ export default function Chatroom({ user, setUser }) {
         ) : (
           <div>
             <Paper className={classes.paper} zdepth={2}>
-              <Paper id="style-1" className={classes.messagesBody}>
+             <Paper id="style-1" className={classes.messagesBody}>
+              <Stack spacing={2}>
                 {messages.map((msg) => {
                   if (msg.senders.split(",")[0] !== user.username) {
                     return (
@@ -153,6 +157,7 @@ export default function Chatroom({ user, setUser }) {
                     );
                   }
                 })}
+                </Stack>
               </Paper>
               <TextInput
                 setMessages={setMessages}
@@ -165,6 +170,8 @@ export default function Chatroom({ user, setUser }) {
             </Paper>
           </div>
         )}
+        {
+        /*
         <video
           id="videoPlayer"
           width="650"
@@ -177,7 +184,7 @@ export default function Chatroom({ user, setUser }) {
             src="https://cnfinal2022.herokuapp.com/api/video"
             type="video/mp4"
           />
-        </video>
+              </video>*/}
       </div>
       {/* </div> */}
     </div>

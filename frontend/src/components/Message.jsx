@@ -10,7 +10,10 @@ import { FileAPI } from "../api";
 import fileDownload from "react-file-download";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
-
+import VideoPop from 'react-video-pop';
+import StickyVideo from 'react-sticky-video';
+import 'react-sticky-video/dist/index.css';
+import ReactPlayer from 'react-player';
 const theme = createTheme();
 const useStyles = makeStyles({
   messageRow: {
@@ -145,6 +148,11 @@ export const MessageLeft = (props) => {
   const photoURL = props.photoURL ? props.photoURL : "dummy.js";
   const displayName = props.displayName ? props.displayName : "Anonymous";
   const classes = useStyles();
+  
+  //const watch = props.watch;
+  //const handleWatch = ()=>{
+  //  props.setWatch(!watch);
+  //}
   const [watch, setWatch] = useState(false);
   return (
     <div className={classes.messageRow}>
@@ -169,29 +177,35 @@ export const MessageLeft = (props) => {
             />
           ) : message.type === "video" ? (
             watch ? (
-              <Paper className={classes.videoPaper}>
+              <>
+              
                 <video
                   src={
                     import.meta.env.VITE_USER_BACKEND_URL +
                     "/api/video?id=" +
                     message.id
                   }
+                  width = '320'
+                  height='240'
                   controls={true}
                 />
                 <Button
                   onClick={() => {
                     setWatch(false);
+                    //handleWatch
                   }}
                 >
                   close
                 </Button>
-              </Paper>
+
+              </>
             ) : (
               <p
                 className={classes.messageContent}
                 onClick={() => {
                   // downloadFile(message.name, message.id);
-                  setWatch(true);
+                 setWatch(true);
+                  //handleWatch
                 }}
               >
                 <FileDownloadIcon />
@@ -239,13 +253,15 @@ export const MessageRight = (props) => {
           />
         ) : message.type === "video" ? (
           watch ? (
-            <Paper className={classes.videoPaper}>
+            <>
               <video
                 src={
                   import.meta.env.VITE_USER_BACKEND_URL +
                   "/api/video?id=" +
                   message.id
                 }
+                width = '320'
+                height='240'
                 controls={true}
               />
               <Button
@@ -255,7 +271,7 @@ export const MessageRight = (props) => {
               >
                 close
               </Button>
-            </Paper>
+              </>
           ) : (
             <p
               className={classes.messageContent}
