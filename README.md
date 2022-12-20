@@ -8,6 +8,9 @@ PORT = 5556
 
 ## function
 
+### server
+* multithread server
+
 ### login & register
 * type the password and account name you want and press register
 * After register, you can use this acccount name and password to login
