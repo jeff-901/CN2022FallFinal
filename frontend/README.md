@@ -16,7 +16,7 @@ VITE_USER_BACKEND_URL=<user backend url>
 
 ```bash
 yarn
-yarn dev
+yarn run dev
 # go to http://localhost:3000
 ```
 
@@ -25,5 +25,6 @@ yarn dev
 ### Build
 
 ```bash
+yarn
 yarn build
 ```

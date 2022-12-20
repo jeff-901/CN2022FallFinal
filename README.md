@@ -1,24 +1,24 @@
 # CN2022FallFinal
 
-## deploy link
-<https://cnfinal2022.herokuapp.com/>
+## Deploy link
+<https://cnfinal2022.herokuapp.com>
 
-## port number
-PORT = 5556
+## Team Members
+B07901052 劉展碩
+B09901142 呂睿超
 
-## function
+## Function
 
-### server
+### Server (Bonus)
 * multithread server
 
-### login & register
+### Login & Register
 * type the password and account name you want and press register
 * After register, you can use this acccount name and password to login
 * Use the logout icon on the upper-right corner to logout in the mainpage
-* uses jwt to encode
-* implemented cookie to manage user state
+* **Bonus**: uses jwt to store user state in cookie
 
-### Add Friend
+### Add Friend (Bonus)
 * Can use add button and type the account name you want to make friends with
 * After adding friend, you can select to chat with them
 
@@ -27,7 +27,7 @@ PORT = 5556
 * After selecting friend, the chatbox is showed with previously posted image. 
 * Uses the textinput field and to enter message.
 
-### File Upload/Download
+### File Upload/Download (Bonus)
 * Use the file upload icon and press the send message button to upload file
 * It would be shown similar with the message form in the chatbox
 * Can use file download icon to fetch and download file.
@@ -42,6 +42,31 @@ PORT = 5556
 * If the file uploaded is a video, click the message(file name) in the chatbox to view the uploaded video.
 * Uses streaming to fetch data from database
 
-## build 
+## Build 
+### set .env
+Add `.env` file with following variables
+```bash
+VITE_USER_BACKEND_URL=<user backend url>
+```
+Then run
+```
+cd frontend
+yarn
+yarn build
+```
+
+## Run
+### set .env
+Add `.env` file with following variables
+```bash
+MONGO_URL=<mongo url>
+secret=<secret key>
+PORT=<port>
+```
+Then run
+```
+pip install -r requirements.txt
+python3 server.py
+```
 
 
