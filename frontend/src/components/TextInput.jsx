@@ -67,14 +67,23 @@ export default function TextInput({
     if (file !== "") {
       console.log(`${user.username} send to ${friend} ${file}`);
       const arrayBuffer = await getArrayBuffer(file);
-      if(file.type == 'video'){
-        let res_file = await FileAPI.createFile(
-          { name: file.name, type: "video" },
-          buf,
-          friend
-        );
-        let res_msg = await MessageAPI.createMessage(friend, {
-          type: "file",
+      let res_file = await FileAPI.createFile(
+        file,
+        arrayBuffer,
+        friend
+      ); 
+      let res_msg;
+      if(file.type.includes("video")){
+        res_msg = await MessageAPI.createMessage(friend, {
+          type: "video",
+          name: file["name"],
+          id: res_file.id,
+        });
+        setMessages([...messages, res_msg]);
+        setFile("");
+      }else if(file.type.includes("audio")){
+        res_msg = await MessageAPI.createMessage(friend, {
+          type: "audio",
           name: file["name"],
           id: res_file.id,
         });
@@ -82,8 +91,7 @@ export default function TextInput({
         setFile("");
       }
       else{
-        let res_file = await FileAPI.createFile(file, arrayBuffer, friend);
-      let res_msg = await MessageAPI.createMessage(friend, {
+        res_msg = await MessageAPI.createMessage(friend, {
         type: "file",
         name: file["name"],
         id: res_file.id,
